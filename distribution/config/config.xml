@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>UF NeuroOmega Application</Name>
+    <Version>0.1.0</Version>
+    <Title>NeuroOmega Application Offline Installer</Title>
+    <Publisher>University of Florida, Fixel Institute for Neurological Diseases</Publisher>
+    <StartMenuDir>UF NeuroOmega Application</StartMenuDir>
+    <TargetDir>@ApplicationsDir@/NeuroOmegaApplication</TargetDir>
+</Installer>

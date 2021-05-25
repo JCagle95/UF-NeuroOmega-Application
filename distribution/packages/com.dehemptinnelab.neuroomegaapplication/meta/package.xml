@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>Main Application</DisplayName>
+    <Description>Install the main application.</Description>
+    <Version>0.1.0</Version>
+    <ReleaseDate>2021-05-24</ReleaseDate>
+    <Licenses>
+        <License name="GNU GPLv3" file="LICENSE" />
+    </Licenses>
+    <Default>script</Default>
+    <Script>installscript.qs</Script>
+</Package>

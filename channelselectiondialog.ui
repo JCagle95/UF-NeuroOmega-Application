@@ -1,0 +1,1335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ChannelSelectionDialog</class>
+ <widget class="QDialog" name="ChannelSelectionDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>480</width>
+    <height>569</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QLabel" name="electrodeImages">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>91</width>
+     <height>521</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>resources/MedtronicDBSLead.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ChannelConfirm">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>520</y>
+     <width>100</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Confirm</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>430</y>
+     <width>111</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft Sans Serif</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Contact #0: </string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>340</y>
+     <width>111</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft Sans Serif</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Contact #1: </string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>250</y>
+     <width>111</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft Sans Serif</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Contact #2: </string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>160</y>
+     <width>111</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft Sans Serif</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Contact #3: </string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="ECOGBoxSelection_Ch1">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>430</y>
+     <width>141</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <item>
+    <property name="text">
+     <string>ECOG Box #1</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #2</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #3</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #4</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="ChannelSelection_Ch1">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>430</y>
+     <width>81</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <item>
+    <property name="text">
+     <string>Ch01</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch02</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch03</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch04</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch05</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch06</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch07</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch08</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch09</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch10</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch11</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch12</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch13</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch14</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch15</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch16</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="ECOGBoxSelection_Ch2_2">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>340</y>
+     <width>141</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <item>
+    <property name="text">
+     <string>ECOG Box #1</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #2</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #3</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #4</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="ECOGBoxSelection_Ch2_3">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>370</y>
+     <width>141</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <item>
+    <property name="text">
+     <string>ECOG Box #1</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #2</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #3</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #4</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="ECOGBoxSelection_Ch2_1">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>310</y>
+     <width>141</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="frame">
+    <bool>true</bool>
+   </property>
+   <item>
+    <property name="text">
+     <string>ECOG Box #1</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #2</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #3</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #4</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="label_10">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>370</y>
+     <width>111</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft Sans Serif</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Contact #1.3: </string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_11">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>310</y>
+     <width>111</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft Sans Serif</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Contact #1.1: </string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="ECOGBoxSelection_Ch3_2">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>250</y>
+     <width>141</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <item>
+    <property name="text">
+     <string>ECOG Box #1</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #2</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #3</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #4</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="ECOGBoxSelection_Ch3_3">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>280</y>
+     <width>141</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <item>
+    <property name="text">
+     <string>ECOG Box #1</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #2</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #3</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #4</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="ECOGBoxSelection_Ch3_1">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>220</y>
+     <width>141</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <item>
+    <property name="text">
+     <string>ECOG Box #1</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #2</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #3</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #4</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="label_12">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>220</y>
+     <width>111</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft Sans Serif</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Contact #2.1: </string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_13">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>280</y>
+     <width>111</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft Sans Serif</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Contact #2.3: </string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="ECOGBoxSelection_Ch4">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>160</y>
+     <width>141</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <item>
+    <property name="text">
+     <string>ECOG Box #1</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #2</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #3</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ECOG Box #4</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="ChannelSelection_Ch2_3">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>370</y>
+     <width>81</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <item>
+    <property name="text">
+     <string>Ch01</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch02</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch03</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch04</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch05</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch06</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch07</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch08</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch09</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch10</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch11</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch12</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch13</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch14</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch15</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch16</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="ChannelSelection_Ch2_2">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>340</y>
+     <width>81</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <item>
+    <property name="text">
+     <string>Ch01</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch02</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch03</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch04</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch05</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch06</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch07</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch08</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch09</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch10</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch11</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch12</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch13</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch14</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch15</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch16</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="ChannelSelection_Ch2_1">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>310</y>
+     <width>81</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <item>
+    <property name="text">
+     <string>Ch01</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch02</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch03</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch04</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch05</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch06</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch07</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch08</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch09</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch10</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch11</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch12</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch13</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch14</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch15</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch16</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="ChannelSelection_Ch3_3">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>280</y>
+     <width>81</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <item>
+    <property name="text">
+     <string>Ch01</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch02</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch03</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch04</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch05</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch06</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch07</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch08</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch09</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch10</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch11</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch12</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch13</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch14</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch15</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch16</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="ChannelSelection_Ch3_2">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>250</y>
+     <width>81</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <item>
+    <property name="text">
+     <string>Ch01</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch02</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch03</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch04</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch05</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch06</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch07</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch08</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch09</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch10</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch11</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch12</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch13</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch14</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch15</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch16</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="ChannelSelection_Ch3_1">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>220</y>
+     <width>81</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <item>
+    <property name="text">
+     <string>Ch01</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch02</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch03</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch04</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch05</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch06</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch07</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch08</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch09</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch10</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch11</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch12</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch13</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch14</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch15</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch16</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="ChannelSelection_Ch4">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>160</y>
+     <width>81</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft YaHei UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <item>
+    <property name="text">
+     <string>Ch01</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch02</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch03</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch04</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch05</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch06</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch07</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch08</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch09</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch10</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch11</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch12</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch13</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch14</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch15</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ch16</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>40</y>
+     <width>341</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Microsoft Tai Le</family>
+     <pointsize>16</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>NeuroOmega External ECOG Box
+Connection Selection</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ChangeAllChannels">
+   <property name="geometry">
+    <rect>
+     <x>379</x>
+     <y>470</y>
+     <width>81</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Change
+All</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RecordingAnnotation</class>
+ <widget class="QDialog" name="RecordingAnnotation">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>588</width>
+    <height>156</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QPushButton" name="RecordingAnnotationSelect">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>161</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Ubuntu Light</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>DBS Threshold</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="RecordingAnnotationSelect_2">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>20</y>
+     <width>161</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Ubuntu Light</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Rest LFP</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="RecordingAnnotationSelect_3">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>20</y>
+     <width>161</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Ubuntu Light</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Rest MER</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="RecordingAnnotationSelect_4">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>80</y>
+     <width>161</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Ubuntu Light</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Research Stim</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="RecordingAnnotationSelect_5">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>80</y>
+     <width>161</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Ubuntu Light</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>4 Contacts
+Research Stim</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="RecordingAnnotationSelect_6">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>80</y>
+     <width>161</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Ubuntu Light</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>8 Contacts
+Research Stim</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>RecordingAnnotationSelect</sender>
+   <signal>clicked()</signal>
+   <receiver>RecordingAnnotation</receiver>
+   <slot>on_RecordingAnnotation_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>44</x>
+     <y>28</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>54</x>
+     <y>8</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>RecordingAnnotationSelect_2</sender>
+   <signal>clicked()</signal>
+   <receiver>RecordingAnnotation</receiver>
+   <slot>on_RecordingAnnotation_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>235</x>
+     <y>31</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>9</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>RecordingAnnotationSelect_3</sender>
+   <signal>clicked()</signal>
+   <receiver>RecordingAnnotation</receiver>
+   <slot>on_RecordingAnnotation_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>438</x>
+     <y>33</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>458</x>
+     <y>11</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>RecordingAnnotationSelect_4</sender>
+   <signal>clicked()</signal>
+   <receiver>RecordingAnnotation</receiver>
+   <slot>on_RecordingAnnotation_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>43</x>
+     <y>108</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>59</x>
+     <y>71</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>RecordingAnnotationSelect_5</sender>
+   <signal>clicked()</signal>
+   <receiver>RecordingAnnotation</receiver>
+   <slot>on_RecordingAnnotation_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>235</x>
+     <y>109</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>246</x>
+     <y>73</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>RecordingAnnotationSelect_6</sender>
+   <signal>clicked()</signal>
+   <receiver>RecordingAnnotation</receiver>
+   <slot>on_RecordingAnnotation_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>435</x>
+     <y>105</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>459</x>
+     <y>72</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>on_RecordingAnnotation_clicked()</slot>
+ </slots>
+</ui>
