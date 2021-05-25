@@ -32,7 +32,12 @@
 *.app
 
 # NeuroOmega Source Codes
-NeuroOmega_SDK/Include/*.h
+NeuroOmega_SDK/*
+
+# Deployment Folder
+debug/*
+release/*
+distribution/*
 
 # Qt-es
 object_script.*.Release
