@@ -184,8 +184,9 @@ void MainWindow::updateAddresses(string address, string targetDirectory)
 void MainWindow::on_SystemMacAddressEdit_clicked()
 {
     string addressString = applicationConfiguration->value("SystemMACAddress").toString().toStdString();
+    string targetDirectory = applicationConfiguration->value("SurgicalLogFolder").toString().toStdString();
 
-    MACAddressDialog addressDialog(this, addressString);
+    MACAddressDialog addressDialog(this, addressString, targetDirectory);
     connect(&addressDialog, &MACAddressDialog::addressUpdated, this, &MainWindow::updateAddresses);
     addressDialog.setFixedSize(addressDialog.size());
     addressDialog.exec();
