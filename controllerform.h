@@ -31,7 +31,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <windows.h>
 #include <ctime>
 
-#include "AOSystemAPI.h"
+#include "AOSystemAPI_TEST.h"
 #include "AOTypes.h"
 #include "datastorage.h"
 #include "channelselectiondialog.h"

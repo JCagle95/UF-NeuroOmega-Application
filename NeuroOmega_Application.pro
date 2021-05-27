@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -24,7 +24,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
+    NeuroOmega_SDK/Include/AOSystemAPI_TEST.cpp \
+    mainwindow.cpp \
     macaddressdialog.cpp \
     controllerform.cpp \
     channelselectiondialog.cpp \
@@ -33,11 +34,9 @@ SOURCES += main.cpp\
     manuallabelentry.cpp \
     datastorage.cpp \
     novelstimulationconfiguration.cpp
+    NeuroOmega_SDK/Include/AOSystemAPI_TEST.cpp \
 
 HEADERS  += mainwindow.h \
-    NeuroOmega_SDK/Include/AOSystemAPI.h \
-    NeuroOmega_SDK/Include/AOTypes.h \
-    NeuroOmega_SDK/Include/StreamFormat.h \
     macaddressdialog.h \
     controllerform.h \
     channelselectiondialog.h \
@@ -45,7 +44,11 @@ HEADERS  += mainwindow.h \
     recordingannotation.h \
     manuallabelentry.h \
     datastorage.h \
-    novelstimulationconfiguration.h
+    novelstimulationconfiguration.h \
+    NeuroOmega_SDK/Include/AOSystemAPI.h \
+    NeuroOmega_SDK/Include/AOSystemAPI_TEST.h \
+    NeuroOmega_SDK/Include/AOTypes.h \
+    NeuroOmega_SDK/Include/StreamFormat.h \
 
 FORMS    += mainwindow.ui \
     macaddressdialog.ui \
@@ -56,9 +59,9 @@ FORMS    += mainwindow.ui \
     manuallabelentry.ui \
     novelstimulationconfiguration.ui
 
+RC_ICONS = logo_icon.ico
+
+win32: LIBS += -L$$PWD/NeuroOmega_SDK/ -lNeuroOmega_x64
+
 INCLUDEPATH += $$PWD/NeuroOmega_SDK/Include
 DEPENDPATH += $$PWD/NeuroOmega_SDK
-
-LIBS += $$PWD/NeuroOmega_SDK/NeuroOmega.lib
-
-RC_ICONS = logo_icon.ico

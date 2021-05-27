@@ -60,3 +60,4 @@ Makefile*
 *build-*
 *.qm
 *.prl
+*.rc

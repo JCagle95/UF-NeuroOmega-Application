@@ -28,7 +28,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "macaddressdialog.h"
 #include "controllerform.h"
-#include "AOSystemAPI.h"
+#include "AOSystemAPI_TEST.h"
 #include "AOTypes.h"
 
 using namespace std;

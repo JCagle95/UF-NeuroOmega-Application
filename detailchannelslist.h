@@ -26,7 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <cstring>
 
-#include "AOSystemAPI.h"
+#include "AOSystemAPI_TEST.h"
 #include "AOTypes.h"
 
 using namespace std;

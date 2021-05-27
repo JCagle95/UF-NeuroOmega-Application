@@ -29,7 +29,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QJsonObject>
 #include <QJsonArray>
 
-#include <NeuroOmega_SDK/Include/AOSystemAPI.h>
+#include "AOSystemAPI_TEST.h"
 
 namespace Ui {
 class NovelStimulationConfiguration;
