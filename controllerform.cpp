@@ -981,14 +981,14 @@ void ControllerForm::startSequentialStimulation()
 
             if (stimulationSequences[i].toObject()["StimulationLead"].toInt() < 0 || stimulationSequences[i].toObject()["StimulationLead"].toInt() > 3)
             {
-                displayError(QMessageBox::Warning, "Lead #" + QString(stimulationSequences[i].toObject()["StimulationLead"].toInt()+1) + " Not Exist");
+                displayError(QMessageBox::Warning, QString("Lead # %1 Not Exist").arg(stimulationSequences[i].toObject()["StimulationLead"].toInt()+1));
                 on_StimulationControl_Stop_clicked();
                 return;
             }
 
             if (this->electrodeConfiguration[stimulationSequences[i].toObject()["StimulationLead"].toInt()].electrodeType == "None")
             {
-                displayError(QMessageBox::Warning, "Lead #" + QString(stimulationSequences[i].toObject()["StimulationLead"].toInt()+1) + " Not Connected");
+                displayError(QMessageBox::Warning, QString("Lead # %1 Not Connected").arg(stimulationSequences[i].toObject()["StimulationLead"].toInt()+1));
                 on_StimulationControl_Stop_clicked();
                 return;
             }
