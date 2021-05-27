@@ -50,7 +50,6 @@ signals:
 
 private slots:
     void on_chooseNovelWaveform_clicked();
-
     void on_chooseStimulationSequence_clicked();
 
 private:

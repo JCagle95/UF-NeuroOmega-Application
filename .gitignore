@@ -61,3 +61,4 @@ Makefile*
 *.qm
 *.prl
 *.rc
+NeuroOmega_Application_resource.rc

@@ -59,7 +59,7 @@ FORMS    += mainwindow.ui \
     manuallabelentry.ui \
     novelstimulationconfiguration.ui
 
-RC_ICONS = logo_icon.ico
+RC_ICONS = $$PWD/resources/logo_icon.ico
 
 win32: LIBS += -L$$PWD/NeuroOmega_SDK/ -lNeuroOmega_x64
 
