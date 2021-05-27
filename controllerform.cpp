@@ -464,6 +464,7 @@ void ControllerForm::on_Electrodes_BtnConfiguration_clicked()
 
         for (int i = 0; i < 4; i++)
         {
+            LeadTypeSelectorWidgets[i]->setEnabled(false);
             ElectrodeSelectionWidgets[i]->setEnabled(false);
             HemisphereSelectionWidgets[i]->setEnabled(false);
             TargetSelectionWidgets[i]->setEnabled(false);
