@@ -524,6 +524,8 @@ void ControllerForm::on_Electrodes_BtnConfiguration_clicked()
         {
             sideEffectsBtns[i]->setEnabled(true);
         }
+
+        ui->Electrodes_BtnConfiguration->setEnabled(false);
     }
 }
 
