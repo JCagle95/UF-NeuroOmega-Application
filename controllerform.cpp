@@ -600,10 +600,10 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
     {
         // Extract Electrode ID and Configuration from Electrode Text
         int electrodeID = 0;
-        string side, target;
+        char side[20], target[20];
         if (electrodeName.contains("Lead"))
         {
-            sscanf(electrodeName.toStdString().c_str(), "Lead #%d %s %s", &electrodeID, &side, &target);
+            sscanf(electrodeName.toStdString().c_str(), "Lead #%d %s %s", &electrodeID, side, target);
             electrodeID--;
         }
 
@@ -643,7 +643,7 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
 }
 
 // UI update for stimulation electrodes
-void ControllerForm::on_StimulationControl_Electrode_currentIndexChanged(const QString &electrodeName)
+void ControllerForm::on_StimulationControl_Electrode_currentTextChanged(const QString &electrodeName)
 {
     setupElectrodeButtons(electrodeName);
     StimulationAnode.clear();
@@ -1634,4 +1634,3 @@ void ControllerForm::on_Electrodes_AdvanceConfiguration_clicked()
     channelListView.setupChannels();
     channelListView.exec();
 }
-

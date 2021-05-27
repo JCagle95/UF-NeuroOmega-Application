@@ -58,7 +58,7 @@ private slots:
     void on_NeuroOmega_BtnConnect_clicked();
     void on_SystemMacAddressEdit_clicked();
     void on_patientID_textEdit_textChanged(const QString &text);
-    void on_diagnosisSelection_currentIndexChanged(const QString &arg1);
+    void on_diagnosisSelection_currentTextChanged(const QString &text);
 
 private:
     ControllerForm *controllerForm;

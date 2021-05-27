@@ -197,7 +197,8 @@ void MainWindow::on_patientID_textEdit_textChanged(const QString &text)
     this->patientID = text.toStdString();
 }
 
-void MainWindow::on_diagnosisSelection_currentIndexChanged(const QString &text)
+void MainWindow::on_diagnosisSelection_currentTextChanged(const QString &text)
 {
     this->diagnosis = text.toStdString();
 }
+

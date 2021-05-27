@@ -97,7 +97,7 @@ private slots:
     void on_ElectrodeSensorSliderChanged(int value);
     void on_channelSelectionDialogClicked();
 
-    void on_StimulationControl_Electrode_currentIndexChanged(const QString &electrodeName);
+    void on_StimulationControl_Electrode_currentTextChanged(const QString &electrodeName);
 
     void on_StimulationContactClicked();
     void on_StimulationContact_GlobalCAN_clicked();
@@ -123,6 +123,7 @@ private slots:
 
     void on_StimulationControl_Novel_clicked();
     void on_StimulationControl_Novel_Start_clicked();
+
 
 private:
     Ui::ControllerForm *ui;
