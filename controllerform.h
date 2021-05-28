@@ -31,7 +31,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <windows.h>
 #include <ctime>
 
+#ifdef QT_DEBUG
 #include "AOSystemAPI_TEST.h"
+#else
+#include "AOSystemAPI.h"
+#endif
 #include "AOTypes.h"
 #include "datastorage.h"
 #include "channelselectiondialog.h"

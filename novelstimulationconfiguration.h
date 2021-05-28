@@ -29,7 +29,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QJsonObject>
 #include <QJsonArray>
 
+#ifdef QT_DEBUG
 #include "AOSystemAPI_TEST.h"
+#else
+#include "AOSystemAPI.h"
+#endif
 
 namespace Ui {
 class NovelStimulationConfiguration;

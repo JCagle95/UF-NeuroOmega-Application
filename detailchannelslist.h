@@ -26,7 +26,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <cstring>
 
+#ifdef QT_DEBUG
 #include "AOSystemAPI_TEST.h"
+#else
+#include "AOSystemAPI.h"
+#endif
 #include "AOTypes.h"
 
 using namespace std;
