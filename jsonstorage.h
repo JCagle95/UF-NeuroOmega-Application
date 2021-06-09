@@ -15,16 +15,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 *********************************************************************************/
 
-#ifndef DATASTORAGE_H
-#define DATASTORAGE_H
+#ifndef JSONSTORAGE_H
+#define JSONSTORAGE_H
 
 #include <QtCore>
 #include <QString>
 
-class DataStorage
+class JSONStorage
 {
 public:
-    DataStorage(QString path, QString name);
+    JSONStorage(QString path, QString name);
 
     void addJSON(QJsonObject newObject);
     void addObjectTimestamp(QString key, QString value);
@@ -41,4 +41,4 @@ private:
 
 
 
-#endif // DATASTORAGE_H
+#endif // JSONSTORAGE_H

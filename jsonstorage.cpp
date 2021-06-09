@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 *********************************************************************************/
 
-#include "datastorage.h"
+#include "jsonstorage.h"
 
-DataStorage::DataStorage(QString path, QString name)
+JSONStorage::JSONStorage(QString path, QString name)
 {
     filePath = path;
     fileName = name;
@@ -36,12 +36,12 @@ DataStorage::DataStorage(QString path, QString name)
     }
 }
 
-void DataStorage::addJSON(QJsonObject newObject)
+void JSONStorage::addJSON(QJsonObject newObject)
 {
     jsonArray.append(newObject);
 }
 
-void DataStorage::addObjectTimestamp(QString key, QString value)
+void JSONStorage::addObjectTimestamp(QString key, QString value)
 {
     QJsonObject newObject;
     newObject[key] = QJsonValue(value);
@@ -51,7 +51,7 @@ void DataStorage::addObjectTimestamp(QString key, QString value)
     jsonArray.append(newObject);
 }
 
-void DataStorage::saveJSON()
+void JSONStorage::saveJSON()
 {
     jsonDocument.setArray(jsonArray);
 
