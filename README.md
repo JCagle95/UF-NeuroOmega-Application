@@ -6,6 +6,8 @@ This is the active development branch for new features and new compatibility. Th
 ## Active Development Feature
 The primary goal of this branch is to build a new interface for real-time data streaming as a complementary interface to the existing stimulation control interface. This real-time data streaming is primary used for research purpose at the moment, but further development will incorporate resarch findings to provide real-time functional mapping.
 
+**The software will undergo major revision to accommodate custom electrode format. Before the revision is completed, it is recommeded not to use the developmental branch for production.** A new interface will be designed with dynamic input form before displaying the Controller Form.
+
 ## Build from Source
 The source code of this application is provided as a QT project file. The source codes are written and tested in QT Creator 4.15, built with [Desktop QT 6.1.0 MinGW 64-bit] (https://wiki.qt.io/Qt_6.1_Release). QT 5 series are not longer supported in this branch.
 
