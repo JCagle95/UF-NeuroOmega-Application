@@ -37,12 +37,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "AOSystemAPI.h"
 #endif
 #include "AOTypes.h"
-#include "datastorage.h"
+#include "jsonstorage.h"
 #include "channelselectiondialog.h"
 #include "detailchannelslist.h"
 #include "recordingannotation.h"
 #include "manuallabelentry.h"
 #include "novelstimulationconfiguration.h"
+#include "realtimestream.h"
 
 using namespace std;
 
@@ -129,6 +130,9 @@ private slots:
     void on_StimulationControl_Novel_Start_clicked();
 
 
+    void on_RealtimeStreamDisplay_clicked();
+    void streamWindowClosed(void);
+
 private:
     Ui::ControllerForm *ui;
     QSettings *applicationConfiguration;
@@ -161,7 +165,7 @@ private:
     bool recordingStatus = false;
 
     // JSON Storage Class for Loggings
-    DataStorage *jsonStorage;
+    JSONStorage *jsonStorage;
     QFile *sideEffectNotes;
 
     // Novel Stimulation Parameters
@@ -172,6 +176,10 @@ private:
     QString currentProgrammedFilename = "";
     QStringList waveformList;
     int currentWaveformID = -1;
+
+    // Realtime Stream QT Form
+    RealtimeStream *streamView;
+    ElectrodeInformation currentElectrodeConfiguration;
 };
 
 #endif // CONTROLLERFORM_H

@@ -111,7 +111,7 @@ void ControllerForm::controllerInitialization(string patientID, string diagnosis
     statusObject["Time"] = QJsonValue(currentTime.currentDateTime().toString("yyyy/MM/dd HH:mm:ss"));
 
     // Create JSON Storage File. This is stored in the SurgicalLogFolder defined in "defaultConfiguration.ini:
-    jsonStorage = new DataStorage(applicationConfiguration->value("SurgicalLogFolder").toString() + "\\", currentTime.currentDateTime().toString("[yyyyMMdd_HH-mm-ss]") + " " + statusObject["Name"].toString() + ".json");
+    jsonStorage = new JSONStorage(applicationConfiguration->value("SurgicalLogFolder").toString() + "\\", currentTime.currentDateTime().toString("[yyyyMMdd_HH-mm-ss]") + " " + statusObject["Name"].toString() + ".json");
     jsonStorage->addJSON(statusObject);
     sideEffectNotes = new QFile(applicationConfiguration->value("SurgicalLogFolder").toString() + "\\" + currentTime.currentDateTime().toString("[yyyyMMdd_HH-mm-ss]") + " " + statusObject["Name"].toString() + ".txt");
     sideEffectNotes->open(QIODevice::WriteOnly | QIODevice::Text);
@@ -526,6 +526,7 @@ void ControllerForm::on_Electrodes_BtnConfiguration_clicked()
         }
 
         ui->Electrodes_BtnConfiguration->setEnabled(false);
+
     }
 }
 
@@ -548,6 +549,8 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
     // Default Display for Micro/Macro Electrode. We currently hard-coded the program to handle up to 2 Microelectrode Arrays.
     if (electrodeName == "Microelectrode / Macroelectrode")
     {
+        this->currentElectrodeConfiguration = {0};
+        int channelIndex = 0;
         ui->StimulationContact_Ring01->setHidden(true);
         ui->StimulationContact_Ring02->setHidden(true);
 
@@ -561,6 +564,8 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
             ui->StimulationContact_E01_1->setProperty("ChannelID", 10000);
             ui->StimulationContact_E01_1->setStyleSheet("");
             ui->StimulationContact_E01_1->setHidden(false);
+            this->currentElectrodeConfiguration.channelID[channelIndex] = 10000;
+            channelIndex++;
         }
 
         // NeuroOmega Channel 10005 - Macroelectrode 01
@@ -572,6 +577,8 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
             ui->StimulationContact_E02_1->setProperty("ChannelID", 10005);
             ui->StimulationContact_E02_1->setStyleSheet("");
             ui->StimulationContact_E02_1->setHidden(false);
+            this->currentElectrodeConfiguration.channelID[channelIndex] = 10005;
+            channelIndex++;
         }
 
         // NeuroOmega Channel 10001 - MicroElectrode 02
@@ -583,6 +590,8 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
             ui->StimulationContact_E01_3->setProperty("ChannelID", 10001);
             ui->StimulationContact_E01_3->setStyleSheet("");
             ui->StimulationContact_E01_3->setHidden(false);
+            this->currentElectrodeConfiguration.channelID[channelIndex] = 10001;
+            channelIndex++;
         }
 
         // NeuroOmega Channel 10006 - Macroelectrode 02
@@ -594,6 +603,8 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
             ui->StimulationContact_E02_3->setProperty("ChannelID", 10006);
             ui->StimulationContact_E02_3->setStyleSheet("");
             ui->StimulationContact_E02_3->setHidden(false);
+            this->currentElectrodeConfiguration.channelID[channelIndex] = 10006;
+            channelIndex++;
         }
     }
     else
@@ -606,6 +617,8 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
             sscanf(electrodeName.toStdString().c_str(), "Lead #%d %s %s", &electrodeID, side, target);
             electrodeID--;
         }
+
+        this->currentElectrodeConfiguration = this->electrodeConfiguration[electrodeID];
 
         // Handle Configuration for 4-contact electrodes
         if (this->electrodeConfiguration[electrodeID].numContacts == 4)
@@ -1633,4 +1646,22 @@ void ControllerForm::on_Electrodes_AdvanceConfiguration_clicked()
     channelListView.setFixedSize(channelListView.size());
     channelListView.setupChannels();
     channelListView.exec();
+}
+
+void ControllerForm::on_RealtimeStreamDisplay_clicked()
+{
+    // Popup the Stream View
+    if (ui->StimulationControl_Electrode->currentText() != "" && streamView == NULL)
+    {
+        streamView = new RealtimeStream();
+        streamView->initializeElectrode(ui->StimulationControl_Electrode->currentText(), this->currentElectrodeConfiguration.channelID);
+        connect(streamView, &RealtimeStream::windowClosed, this, &ControllerForm::streamWindowClosed);
+        streamView->show();
+    }
+}
+
+void ControllerForm::streamWindowClosed(void)
+{
+    delete(streamView);
+    streamView = NULL;
 }

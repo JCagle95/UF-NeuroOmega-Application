@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui charts
+QT       += core gui charts network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,36 +25,41 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
     NeuroOmega_SDK/Include/AOSystemAPI_TEST.cpp \
+    jsonstorage.cpp \
     mainwindow.cpp \
     macaddressdialog.cpp \
     controllerform.cpp \
     channelselectiondialog.cpp \
     detailchannelslist.cpp \
+    realtimestream.cpp \
     recordingannotation.cpp \
     manuallabelentry.cpp \
-    datastorage.cpp \
-    novelstimulationconfiguration.cpp
+    novelstimulationconfiguration.cpp \
+    streamdatahandler.cpp
     NeuroOmega_SDK/Include/AOSystemAPI_TEST.cpp \
 
 HEADERS  += mainwindow.h \
+    jsonstorage.h \
     macaddressdialog.h \
     controllerform.h \
     channelselectiondialog.h \
     detailchannelslist.h \
+    realtimestream.h \
     recordingannotation.h \
     manuallabelentry.h \
-    datastorage.h \
     novelstimulationconfiguration.h \
     NeuroOmega_SDK/Include/AOSystemAPI.h \
     NeuroOmega_SDK/Include/AOSystemAPI_TEST.h \
     NeuroOmega_SDK/Include/AOTypes.h \
     NeuroOmega_SDK/Include/StreamFormat.h \
+    streamdatahandler.h
 
 FORMS    += mainwindow.ui \
     macaddressdialog.ui \
     controllerform.ui \
     channelselectiondialog.ui \
     detailchannelslist.ui \
+    realtimestream.ui \
     recordingannotation.ui \
     manuallabelentry.ui \
     novelstimulationconfiguration.ui
