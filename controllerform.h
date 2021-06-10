@@ -31,12 +31,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <windows.h>
 #include <ctime>
 
-#ifdef QT_DEBUG
-#include "AOSystemAPI_TEST.h"
-#else
-#include "AOSystemAPI.h"
-#endif
-#include "AOTypes.h"
+#include "electrodeconfigurations.h"
 #include "jsonstorage.h"
 #include "channelselectiondialog.h"
 #include "detailchannelslist.h"
@@ -45,21 +40,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "novelstimulationconfiguration.h"
 #include "realtimestream.h"
 
+#ifdef QT_DEBUG
+#include "AOSystemAPI_TEST.h"
+#else
+#include "AOSystemAPI.h"
+#endif
+#include "AOTypes.h"
+
 using namespace std;
 
 namespace Ui {
 class ControllerForm;
 }
-
-typedef struct ElectrodeInformation
-{
-    QString electrodeType = "";
-    QString hemisphere = "";
-    QString target = "";
-    int channelID[8] = {0};
-    int numContacts = 0;
-    bool verified = false;
-} ElectrodeInformation;
 
 class ControllerForm : public QMainWindow
 {
@@ -68,6 +60,7 @@ class ControllerForm : public QMainWindow
 public:
     explicit ControllerForm(QWidget *parent = 0);
     void controllerInitialization(string patientID, string diagnosis);
+    void configureElectrodes(QList<ElectrodeInformation> electrodeInformations);
     void closeEvent(QCloseEvent *event);
     ~ControllerForm();
 
@@ -97,11 +90,6 @@ signals:
     void connectionChanged();
 
 private slots:
-    void on_ElectrodeTypeSelectionCurrentIndexChanged(QString electrode);
-    void on_Electrodes_BtnConfiguration_clicked();
-    void on_ElectrodeSensorSliderChanged(int value);
-    void on_channelSelectionDialogClicked();
-
     void on_StimulationControl_Electrode_currentTextChanged(const QString &electrodeName);
 
     void on_StimulationContactClicked();
@@ -140,8 +128,8 @@ private:
     string patientID = "";
     string diagnosis = "";
 
-    ElectrodeInformation electrodeConfiguration[4];
-    QList<int> allContacts;
+    // List holding all electrodes
+    QList<ElectrodeInformation> electrodeConfigurations;
 
     // Cathode is "+", Anode is "-". The Global Return can only be cathode "+".
     // There can only be 1 return channel in this program to simply things.

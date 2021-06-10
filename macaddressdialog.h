@@ -36,7 +36,7 @@ public:
     ~MACAddressDialog();
 
 signals:
-    addressUpdated(string address, string targetDirectory);
+    void addressUpdated(string address, string targetDirectory);
 
 private slots:
     void on_AddressConfirm_clicked();

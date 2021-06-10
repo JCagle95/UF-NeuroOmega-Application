@@ -148,16 +148,29 @@ void MainWindow::on_NeuroOmega_BtnConnect_clicked()
 
         if (connectionStatus)
         {
-            ui->NeuroOmega_BtnConnect->setEnabled(false);
-            ui->patientID_textEdit->setEnabled(false);
-            ui->diagnosisSelection->setEnabled(false);
-            ui->SystemMacAddressEdit->setEnabled(false);
+            configurationForm = new ElectrodeConfigurations();
+            configurationForm->setFixedSize(configurationForm->size());
 
-            controllerForm = new ControllerForm();
-            controllerForm->controllerInitialization(this->patientID, this->diagnosis);
-            controllerForm->setFixedSize(controllerForm->size());
-            connect(controllerForm, &ControllerForm::connectionChanged, this, &MainWindow::onConnectionUpdate);
-            controllerForm->show();
+            if (configurationForm->exec() == configurationForm->Accepted)
+            {
+                ui->NeuroOmega_BtnConnect->setEnabled(false);
+                ui->patientID_textEdit->setEnabled(false);
+                ui->diagnosisSelection->setEnabled(false);
+                ui->SystemMacAddressEdit->setEnabled(false);
+
+                controllerForm = new ControllerForm();
+                controllerForm->controllerInitialization(this->patientID, this->diagnosis);
+                controllerForm->configureElectrodes(configurationForm->electrodeInfoCollection);
+                qDebug() << "Test";
+                controllerForm->setFixedSize(controllerForm->size());
+                connect(controllerForm, &ControllerForm::connectionChanged, this, &MainWindow::onConnectionUpdate);
+                controllerForm->show();
+            }
+            else
+            {
+                CloseConnection();
+            }
+
         }
         else
         {

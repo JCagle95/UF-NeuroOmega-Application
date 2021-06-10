@@ -25,6 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
     NeuroOmega_SDK/Include/AOSystemAPI_TEST.cpp \
+    electrodeconfigurations.cpp \
     jsonstorage.cpp \
     mainwindow.cpp \
     macaddressdialog.cpp \
@@ -39,6 +40,7 @@ SOURCES += main.cpp\
     NeuroOmega_SDK/Include/AOSystemAPI_TEST.cpp \
 
 HEADERS  += mainwindow.h \
+    electrodeconfigurations.h \
     jsonstorage.h \
     macaddressdialog.h \
     controllerform.h \
@@ -55,6 +57,7 @@ HEADERS  += mainwindow.h \
     streamdatahandler.h
 
 FORMS    += mainwindow.ui \
+    electrodeconfigurations.ui \
     macaddressdialog.ui \
     controllerform.ui \
     channelselectiondialog.ui \

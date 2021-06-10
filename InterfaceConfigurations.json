@@ -1,0 +1,31 @@
+{
+  "ElectrodeDefinitions": [
+    {
+      "ElectrodeName": "Medtronic 3387",
+      "ChannelCount": 4
+    },
+    {
+      "ElectrodeName": "Medtronic 3389",
+      "ChannelCount": 4
+    },
+    {
+      "ElectrodeName": "Medtronic Segmented",
+      "ChannelCount": 8
+    },
+    {
+      "ElectrodeName": "Boston Segmented",
+      "ChannelCount": 8
+    },
+    {
+      "ElectrodeName": "ECoG - 24",
+      "ChannelCount": 24
+    }
+  ],
+  "TargetDefinitions": [
+    "GPi",
+    "STN",
+    "VIM",
+    "VO",
+    "Other"
+  ]
+}

@@ -24,8 +24,6 @@ ControllerForm::ControllerForm(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    formatElectrodeConfiguration();
-
     QPushButton *contactButtons[] = {ui->StimulationContact_E00,
                                      ui->StimulationContact_E01_1, ui->StimulationContact_E01_2, ui->StimulationContact_E01_3,
                                      ui->StimulationContact_E02_1, ui->StimulationContact_E02_2, ui->StimulationContact_E02_3,
@@ -129,11 +127,6 @@ void ControllerForm::controllerInitialization(string patientID, string diagnosis
         return;
     }
 
-    // Initialize the channel names. Set the default type (Electrode vs Sensor) in UI Forms
-    configureElectrodeConfigurationText("ElectrodeTypeSelection_Ch1", ui->ElectrodeTypeSelector_01->value());
-    configureElectrodeConfigurationText("ElectrodeTypeSelection_Ch2", ui->ElectrodeTypeSelector_02->value());
-    configureElectrodeConfigurationText("ElectrodeTypeSelection_Ch3", ui->ElectrodeTypeSelector_03->value());
-    configureElectrodeConfigurationText("ElectrodeTypeSelection_Ch4", ui->ElectrodeTypeSelector_04->value());
 }
 
 // Clean-up after Form is closed
@@ -264,269 +257,63 @@ void ControllerForm::checkStatus()
 ////////////////////////////////////
 /// Electrode Dropbox Callbacks ////
 ////////////////////////////////////
-// General UI-updating function for Electrode Configuration
-void ControllerForm::on_ElectrodeTypeSelectionCurrentIndexChanged(QString electrode)
+// The main electrode loading process.
+void ControllerForm::configureElectrodes(QList<ElectrodeInformation> electrodeInformations)
 {
-    QComboBox *electrodeSelector = qobject_cast<QComboBox*>(sender());
-    QComboBox *hemisphereSelector = ui->centralwidget->findChild<QComboBox*>(electrodeSelector->objectName().replace("ElectrodeTypeSelection_Ch", "HemisphereSelection_Ch"));
-    QComboBox *targetSelector = ui->centralwidget->findChild<QComboBox*>(electrodeSelector->objectName().replace("ElectrodeTypeSelection_Ch", "TargetSelection_Ch"));
-    QPushButton *channelSelector = ui->centralwidget->findChild<QPushButton*>(electrodeSelector->objectName().replace("ElectrodeTypeSelection_Ch", "ChannelSelection_Ch"));
-    int electrodeID = electrodeSelector->objectName().replace("ElectrodeTypeSelection_Ch", "").toInt()-1;
+    electrodeConfigurations = electrodeInformations;
 
-    if (electrode != "None")
+    // Configure the selected channel for recording. See detail function "configureRecordingChannels()" on how this process work.
+    if (!configureRecordingChannels()) return;
+
+    // UI-update to display channels for selection.
+    ui->StimulationContact_GlobalCAN->setHidden(false);
+
+    // JSON logging to record what electrode configurations are stored for this patient.
+    QJsonObject jsonObject;
+    jsonObject["ObjectType"] = QJsonValue("ElectrodeConfigurations");
+
+    // First adding Microelectrode/Macroelectrode Selection
+    ui->StimulationControl_Electrode->addItem("Microelectrode / Macroelectrode");
+
+    // Include the 4 Predefined Channel
+    for (int i = 0; i < electrodeConfigurations.size(); i++)
     {
-        hemisphereSelector->setEnabled(true);
-        targetSelector->setEnabled(true);
-        channelSelector->setEnabled(true);
-    }
-    else
-    {
-        hemisphereSelector->setEnabled(false);
-        targetSelector->setEnabled(false);
-        channelSelector->setEnabled(false);
-    }
-    this->electrodeConfiguration[electrodeID].verified = false;
-
-    QLabel *checkStatus = ui->centralwidget->findChild<QLabel*>(electrodeSelector->objectName().replace("ElectrodeTypeSelection_Ch", "CheckedStatus_Ch"));
-    checkStatus->setPixmap(QPixmap(QDir::currentPath() + "/resources/Failed.png"));
-}
-
-// Slider to configure if the electrode is Sensor or Lead
-void ControllerForm::on_ElectrodeSensorSliderChanged(int value)
-{
-    QSlider *slider = qobject_cast<QSlider*>(sender());
-    configureElectrodeConfigurationText(slider->objectName().replace("ElectrodeTypeSelector_0", "ElectrodeTypeSelection_Ch"), value);
-}
-
-// Electrode Configuration Setup
-void ControllerForm::configureElectrodeConfigurationText(QString electrodeSelectorName, int type)
-{
-    QComboBox *ElectrodeTypeSelector = ui->centralwidget->findChild<QComboBox *>(electrodeSelectorName);
-    ElectrodeTypeSelector->clear();
-    QComboBox *TargetSelector = ui->centralwidget->findChild<QComboBox*>(electrodeSelectorName.replace("ElectrodeTypeSelection_Ch", "TargetSelection_Ch"));
-    TargetSelector->clear();
-
-    // These are names to be placed in the GUI. Configure this list of names to match your need.
-    QStringList leadNames = {"None", "Medtronic 3387", "Medtronic 3389", "Medtronic Segmented", "Boston Segmented"};
-    QStringList sensorNames = {"None", "EMG Pads", "EEG Pads"};
-    QStringList leadTargets = {"GPi", "STN", "VIM", "VO", "Others"};
-    QStringList sensorTargets = {"ECR", "Leg", "Shoulder", "Others"};
-
-    if (type == 1)
-    {
-        ElectrodeTypeSelector->addItems(leadNames);
-        TargetSelector->addItems(leadTargets);
-    }
-    else
-    {
-        ElectrodeTypeSelector->addItems(sensorNames);
-        TargetSelector->addItems(sensorTargets);
-    }
-}
-
-// The Signal() to receive ChannelSelectionDialog configurations.
-void ControllerForm::updateChannelConfiguration(int *channelIDs, int len, int electrodeID)
-{
-    for (int i = 0; i < len; i++)
-    {
-        this->electrodeConfiguration[electrodeID].channelID[i] = channelIDs[i];
-    }
-}
-
-// The popup window generation code. Create a popup window that handle the user's selection of NeuroOmega channel IDs.
-void ControllerForm::on_channelSelectionDialogClicked()
-{
-    QPushButton *channelSelector = qobject_cast<QPushButton*>(sender());
-    QComboBox *electrodeSelector = ui->centralwidget->findChild<QComboBox *>(channelSelector->objectName().replace("ChannelSelection_Ch", "ElectrodeTypeSelection_Ch"));
-    QString channelText = electrodeSelector->currentText();
-    int channelID = channelSelector->objectName().replace("ChannelSelection_Ch", "").toInt()-1;
-
-    ChannelSelectionDialog channelSelectionDialog;
-    channelSelectionDialog.setFixedSize(channelSelectionDialog.size());
-    channelSelectionDialog.configureContactNumbers(channelText, channelID);
-    channelSelectionDialog.configurePredefinedChannels(this->electrodeConfiguration[channelID].channelID);
-    connect(&channelSelectionDialog, &ChannelSelectionDialog::channelIDsUpdate, this, &ControllerForm::updateChannelConfiguration);
-    channelSelectionDialog.exec();
-}
-
-// Preliminary Electrode Configuration Check. There are limited electrode available in selection in current version.
-//      Additional electrodes may be included with checks to be included below.
-void ControllerForm::formatElectrodeConfiguration()
-{
-    QComboBox *ElectrodeSelectionWidgets[] = {ui->ElectrodeTypeSelection_Ch1, ui->ElectrodeTypeSelection_Ch2, ui->ElectrodeTypeSelection_Ch3, ui->ElectrodeTypeSelection_Ch4};
-    QComboBox *HemisphereSelectionWidgets[] = {ui->HemisphereSelection_Ch1, ui->HemisphereSelection_Ch2, ui->HemisphereSelection_Ch3, ui->HemisphereSelection_Ch4};
-    QComboBox *TargetSelectionWidgets[] = {ui->TargetSelection_Ch1, ui->TargetSelection_Ch2, ui->TargetSelection_Ch3, ui->TargetSelection_Ch4};
-
-    allContacts.clear();
-    for (int i = 0; i < 4; i++)
-    {
-        this->electrodeConfiguration[i].electrodeType = ElectrodeSelectionWidgets[i]->currentText();
-        if (HemisphereSelectionWidgets[i]->isEnabled())
+        if (electrodeConfigurations[i].electrodeType != "None")
         {
-            this->electrodeConfiguration[i].hemisphere = HemisphereSelectionWidgets[i]->currentText();
-            this->electrodeConfiguration[i].target = TargetSelectionWidgets[i]->currentText();
-        }
-        else
-        {
-            this->electrodeConfiguration[i].hemisphere = "";
-            this->electrodeConfiguration[i].target = "";
-        }
-
-        this->electrodeConfiguration[i].numContacts = 0;
-        if (this->electrodeConfiguration[i].electrodeType == "Boston Segmented" || this->electrodeConfiguration[i].electrodeType == "Medtronic Segmented")
-        {
-            this->electrodeConfiguration[i].numContacts = 8;
-        }
-        else if (this->electrodeConfiguration[i].electrodeType == "Medtronic 3387" || this->electrodeConfiguration[i].electrodeType == "Medtronic 3389")
-        {
-            this->electrodeConfiguration[i].numContacts = 4;
-        }
-        else if (this->electrodeConfiguration[i].electrodeType == "EMG Pads" || this->electrodeConfiguration[i].electrodeType == "ECG Sensors")
-        {
-            this->electrodeConfiguration[i].numContacts = 4;
-        }
-
-        // Main veritification in this step is to check if the NeuroOmega recording channel is configured for all electrode contacts
-        this->electrodeConfiguration[i].verified = true;
-        if (HemisphereSelectionWidgets[i]->isEnabled())
-        {
-            for (int j = 0; j < this->electrodeConfiguration[i].numContacts; j++)
-            {
-                if (this->electrodeConfiguration[i].channelID[j] == 0)
-                {
-                    // Missing channel configuration error message is here.
-                    displayError(QMessageBox::Warning, "Electrode #" + QString::number(i+1) + " Channels not configured.");
-                    this->electrodeConfiguration[i].verified = false;
-                    break;
-                }
-                else
-                {
-                    // Duplication of channel error message is here.
-                    int index = allContacts.indexOf(this->electrodeConfiguration[i].channelID[j]);
-                    if (index != -1 && this->electrodeConfiguration[i].channelID[j] > 0)
-                    {
-                        displayError(QMessageBox::Warning, "Electrode #" + QString::number(i+1) + " Channels found previously defined channel (" + QString::number(this->electrodeConfiguration[i].channelID[j] - 10271) + ").");
-                        this->electrodeConfiguration[i].verified = false;
-                        break;
-                    }
-                    allContacts << this->electrodeConfiguration[i].channelID[j];
-                }
-            }
-        }
-    }
-}
-
-// The main electrode verification procedure. Edit to include additional checks and handles
-void ControllerForm::on_Electrodes_BtnConfiguration_clicked()
-{
-    // The preliminary electrode configuration check. See above.
-    formatElectrodeConfiguration();
-    QPixmap checkedMark(QDir::currentPath() + "/resources/Checked.png");
-    QPixmap failedMark(QDir::currentPath() + "/resources/Failed.png");
-
-    // Verify that all four electrodes matches the initial verification.
-    bool allPass = true;
-    QLabel *statusIcon[] = {ui->CheckedStatus_Ch1, ui->CheckedStatus_Ch2, ui->CheckedStatus_Ch3, ui->CheckedStatus_Ch4};
-    for (int i = 0; i < 4; i++)
-    {
-        if (this->electrodeConfiguration[i].verified)
-        {
-            statusIcon[i]->setPixmap(checkedMark);
-        }
-        else
-        {
-            statusIcon[i]->setPixmap(failedMark);
-            allPass = false;
+            ui->StimulationControl_Electrode->addItem("Lead #" + QString::number(i+1) + " " + electrodeConfigurations[i].hemisphere + " " + electrodeConfigurations[i].target);
+            jsonObject["Lead" + QString::number(i+1)] = QJsonValue(electrodeConfigurations[i].electrodeType + " " + electrodeConfigurations[i].hemisphere + " " + electrodeConfigurations[i].target);
         }
     }
 
-    // "Fun" fact, if all electrodes are disabled, they will still be considered as all passing the initial verification process.
-    // This is a second step verification to make sure there are actually electrode configured.
-    if (allPass && allContacts.size() == 0)
+    QDateTime currentTime;
+    jsonObject["Time"] = QJsonValue(currentTime.currentDateTime().toString("yyyy/MM/dd HH:mm:ss"));
+    jsonStorage->addJSON(jsonObject);
+
+    // UI udpates
+    ui->StimulationControl_Electrode->setEnabled(true);
+    ui->StimulationControl_Electrode->setCurrentIndex(0);
+    setupElectrodeButtons(ui->StimulationControl_Electrode->currentText());
+    ui->StimulationControl_Amplitude->setEnabled(true);
+    ui->StimulationControl_Pulsewidth->setEnabled(true);
+    ui->StimulationControl_Frequency->setEnabled(true);
+    ui->StimulationControl_Duration->setEnabled(true);
+    ui->StimulationControl_Start->setEnabled(true);
+    ui->NeuroOmega_RecordingStart->setEnabled(true);
+
+    QPushButton *benefitBtns[] = {ui->TremorScale_1, ui->TremorScale_2, ui->TremorScale_3, ui->TremorScale_4, ui->TremorScale_5,
+                                  ui->RigidScale_1, ui->RigidScale_2, ui->RigidScale_3, ui->RigidScale_4, ui->RigidScale_5,
+                                  ui->BradyScale_1, ui->BradyScale_2, ui->BradyScale_3, ui->BradyScale_4, ui->BradyScale_5};
+    for (int i = 0; i < 15; i++)
     {
-        displayError(QMessageBox::Critical, "None of the electrodes are connected.");
-        return;
+        benefitBtns[i]->setEnabled(true);
     }
 
-    // Proceed to process all channels after
-    if (allPass)
+    QPushButton *sideEffectsBtns[] = {ui->SideEffectsLabels_1, ui->SideEffectsLabels_2, ui->SideEffectsLabels_3, ui->SideEffectsLabels_4,
+                                      ui->SideEffectsLabels_5, ui->SideEffectsLabels_6, ui->SideEffectsLabels_7, ui->SideEffectsLabels_8,
+                                      ui->PersistentSideEffectsLabel, ui->TransientSideEffectsLabel};
+    for (int i = 0; i < 10; i++)
     {
-        // Configure the selected channel for recording. See detail function "configureRecordingChannels()" on how this process work.
-        if (!configureRecordingChannels()) return;
-
-        // UI-update to display channels for selection.
-        ui->StimulationContact_GlobalCAN->setHidden(false);
-        QSlider *LeadTypeSelectorWidgets[] = {ui->ElectrodeTypeSelector_01, ui->ElectrodeTypeSelector_02, ui->ElectrodeTypeSelector_03, ui->ElectrodeTypeSelector_04};
-        QComboBox *ElectrodeSelectionWidgets[] = {ui->ElectrodeTypeSelection_Ch1, ui->ElectrodeTypeSelection_Ch2, ui->ElectrodeTypeSelection_Ch3, ui->ElectrodeTypeSelection_Ch4};
-        QComboBox *HemisphereSelectionWidgets[] = {ui->HemisphereSelection_Ch1, ui->HemisphereSelection_Ch2, ui->HemisphereSelection_Ch3, ui->HemisphereSelection_Ch4};
-        QComboBox *TargetSelectionWidgets[] = {ui->TargetSelection_Ch1, ui->TargetSelection_Ch2, ui->TargetSelection_Ch3, ui->TargetSelection_Ch4};
-        QPushButton *ChannelConfigurationWidgets[] = {ui->ChannelSelection_Ch1, ui->ChannelSelection_Ch2, ui->ChannelSelection_Ch3, ui->ChannelSelection_Ch4};
-
-        for (int i = 0; i < 4; i++)
-        {
-            LeadTypeSelectorWidgets[i]->setEnabled(false);
-            ElectrodeSelectionWidgets[i]->setEnabled(false);
-            HemisphereSelectionWidgets[i]->setEnabled(false);
-            TargetSelectionWidgets[i]->setEnabled(false);
-            ChannelConfigurationWidgets[i]->setEnabled(false);
-        }
-
-        // JSON logging to record what electrode configurations are stored for this patient.
-        QJsonObject jsonObject;
-        jsonObject["ObjectType"] = QJsonValue("ElectrodeConfigurations");
-
-        // First adding Microelectrode/Macroelectrode Selection
-        ui->StimulationControl_Electrode->addItem("Microelectrode / Macroelectrode");
-
-        // Include the 4 Predefined Channel
-        for (int i = 0; i < 4; i++)
-        {
-            if (ElectrodeSelectionWidgets[i]->currentText() != "None" && LeadTypeSelectorWidgets[i]->value() == 1)
-            {
-                ui->StimulationControl_Electrode->addItem("Lead #" + QString::number(i+1) + " " + HemisphereSelectionWidgets[i]->currentText() + " " + TargetSelectionWidgets[i]->currentText());
-                jsonObject["Lead" + QString::number(i+1)] = QJsonValue(ElectrodeSelectionWidgets[i]->currentText() + " " + HemisphereSelectionWidgets[i]->currentText() + " " + TargetSelectionWidgets[i]->currentText());
-            }
-            else if (ElectrodeSelectionWidgets[i]->currentText() != "None" && LeadTypeSelectorWidgets[i]->value() == 0)
-            {
-                // Uncomment the following section if you want to include Sensor in the electrode selection for stimulation.
-                /* ui->StimulationControl_Electrode->addItem("Sensor #" + QString::number(i-1)); */
-                jsonObject["Sensor" + QString::number(i-1)] = QJsonValue(ElectrodeSelectionWidgets[i]->currentText() + " " + HemisphereSelectionWidgets[i]->currentText() + " " + TargetSelectionWidgets[i]->currentText());
-            }
-        }
-
-        QDateTime currentTime;
-        jsonObject["Time"] = QJsonValue(currentTime.currentDateTime().toString("yyyy/MM/dd HH:mm:ss"));
-        jsonStorage->addJSON(jsonObject);
-
-        // UI udpates
-        ui->StimulationControl_Electrode->setEnabled(true);
-        ui->StimulationControl_Electrode->setCurrentIndex(0);
-        setupElectrodeButtons(ui->StimulationControl_Electrode->currentText());
-        ui->StimulationControl_Amplitude->setEnabled(true);
-        ui->StimulationControl_Pulsewidth->setEnabled(true);
-        ui->StimulationControl_Frequency->setEnabled(true);
-        ui->StimulationControl_Duration->setEnabled(true);
-        ui->StimulationControl_Start->setEnabled(true);
-        ui->NeuroOmega_RecordingStart->setEnabled(true);
-
-        QPushButton *benefitBtns[] = {ui->TremorScale_1, ui->TremorScale_2, ui->TremorScale_3, ui->TremorScale_4, ui->TremorScale_5,
-                                      ui->RigidScale_1, ui->RigidScale_2, ui->RigidScale_3, ui->RigidScale_4, ui->RigidScale_5,
-                                      ui->BradyScale_1, ui->BradyScale_2, ui->BradyScale_3, ui->BradyScale_4, ui->BradyScale_5};
-        for (int i = 0; i < 15; i++)
-        {
-            benefitBtns[i]->setEnabled(true);
-        }
-
-        QPushButton *sideEffectsBtns[] = {ui->SideEffectsLabels_1, ui->SideEffectsLabels_2, ui->SideEffectsLabels_3, ui->SideEffectsLabels_4,
-                                          ui->SideEffectsLabels_5, ui->SideEffectsLabels_6, ui->SideEffectsLabels_7, ui->SideEffectsLabels_8,
-                                          ui->PersistentSideEffectsLabel, ui->TransientSideEffectsLabel};
-        for (int i = 0; i < 10; i++)
-        {
-            sideEffectsBtns[i]->setEnabled(true);
-        }
-
-        ui->Electrodes_BtnConfiguration->setEnabled(false);
-
+        sideEffectsBtns[i]->setEnabled(true);
     }
 }
 
@@ -618,10 +405,10 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
             electrodeID--;
         }
 
-        this->currentElectrodeConfiguration = this->electrodeConfiguration[electrodeID];
+        this->currentElectrodeConfiguration = this->electrodeConfigurations[electrodeID];
 
         // Handle Configuration for 4-contact electrodes
-        if (this->electrodeConfiguration[electrodeID].numContacts == 4)
+        if (this->electrodeConfigurations[electrodeID].numContacts == 4)
         {
             ui->StimulationContact_Ring01->setHidden(true);
             ui->StimulationContact_Ring02->setHidden(true);
@@ -629,7 +416,7 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
             for (int i = 0; i < 4; i++)
             {
                 contactButtons[i]->setText("Contact\n" + QString::number(i));
-                contactButtons[i]->setProperty("ChannelID", this->electrodeConfiguration[electrodeID].channelID[i]);
+                contactButtons[i]->setProperty("ChannelID", this->electrodeConfigurations[electrodeID].channelID[i]);
                 contactButtons[i]->setStyleSheet("");
                 contactButtons[i]->setHidden(false);
             }
@@ -645,7 +432,7 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
             {
                 int ringID = ((i - 1) / 3) + 1;
                 contactButtons[i]->setText("Contact\n" + QString::number(ringID) + "." + QString::number(i - (ringID - 1) * 3));
-                contactButtons[i]->setProperty("ChannelID", this->electrodeConfiguration[electrodeID].channelID[i]);
+                contactButtons[i]->setProperty("ChannelID", this->electrodeConfigurations[electrodeID].channelID[i]);
                 contactButtons[i]->setStyleSheet("");
                 contactButtons[i]->setHidden(false);
             }
@@ -999,7 +786,7 @@ void ControllerForm::startSequentialStimulation()
                 return;
             }
 
-            if (this->electrodeConfiguration[stimulationSequences[i].toObject()["StimulationLead"].toInt()].electrodeType == "None")
+            if (this->electrodeConfigurations[stimulationSequences[i].toObject()["StimulationLead"].toInt()].electrodeType == "None")
             {
                 displayError(QMessageBox::Warning, QString("Lead # %1 Not Connected").arg(stimulationSequences[i].toObject()["StimulationLead"].toInt()+1));
                 on_StimulationControl_Stop_clicked();
@@ -1012,9 +799,9 @@ void ControllerForm::startSequentialStimulation()
                 {
                     // Stimulation Contacts
                     QJsonArray stimulationContactArray = stimulationSequences[i].toObject()["StimulationChannel"].toArray();
-                    int *channelIDs = this->electrodeConfiguration[stimulationSequences[i].toObject()["StimulationLead"].toInt()].channelID;
+                    int *channelIDs = this->electrodeConfigurations[stimulationSequences[i].toObject()["StimulationLead"].toInt()].channelID;
 
-                    if (stimulationSequences[i].toObject()["StimulationReturn"].toInt() > this->electrodeConfiguration[stimulationSequences[i].toObject()["StimulationLead"].toInt()].numContacts ||
+                    if (stimulationSequences[i].toObject()["StimulationReturn"].toInt() > this->electrodeConfigurations[stimulationSequences[i].toObject()["StimulationLead"].toInt()].numContacts ||
                         stimulationSequences[i].toObject()["StimulationReturn"].toInt() < -1)
                     {
                         displayError(QMessageBox::Warning, "Bad Stimulation Configuration, Bad contacts");
@@ -1054,7 +841,7 @@ void ControllerForm::startSequentialStimulation()
                     {
                         for (int j = 0; j < stimulationContactArray.size(); j++)
                         {
-                            if (stimulationContactArray[j].toInt() > this->electrodeConfiguration[stimulationSequences[i].toObject()["StimulationLead"].toInt()].numContacts ||
+                            if (stimulationContactArray[j].toInt() > this->electrodeConfigurations[stimulationSequences[i].toObject()["StimulationLead"].toInt()].numContacts ||
                                 stimulationContactArray[j].toInt() < 0)
                             {
                                 displayError(QMessageBox::Warning, "Bad Stimulation Configuration, Bad contacts");
@@ -1086,7 +873,7 @@ void ControllerForm::startSequentialStimulation()
 
                         for (int j = 0; j < stimulationContactArray.size(); j++)
                         {
-                            if (stimulationContactArray[j].toInt() >= this->electrodeConfiguration[stimulationSequences[i].toObject()["StimulationLead"].toInt()].numContacts ||
+                            if (stimulationContactArray[j].toInt() >= this->electrodeConfigurations[stimulationSequences[i].toObject()["StimulationLead"].toInt()].numContacts ||
                                 stimulationContactArray[j].toInt() < 0)
                             {
                                 displayError(QMessageBox::Warning, "Bad Stimulation Configuration, Bad contacts");
@@ -1284,13 +1071,13 @@ bool ControllerForm::configureRecordingChannels()
     resetSaveStates();
 
     // Given the 4 existing channels.
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < this->electrodeConfigurations.size(); i++)
     {
-        for (int j = 0; j < this->electrodeConfiguration[i].numContacts; j++)
+        for (int j = 0; j < this->electrodeConfigurations[i].numContacts; j++)
         {
-            if (this->electrodeConfiguration[i].channelID[j] > 0)
+            if (this->electrodeConfigurations[i].channelID[j] > 0)
             {
-                int result = SetChannelName(this->electrodeConfiguration[i].channelID[j], "temp", 4);
+                int result = SetChannelName(this->electrodeConfigurations[i].channelID[j], "temp", 4);
                 if (result != eAO_OK)
                 {
                     QString messsage = getErrorLog();
@@ -1298,9 +1085,9 @@ bool ControllerForm::configureRecordingChannels()
                     return false;
                 }
 
-                QString channelName = "Lead_" + QString::number(i+1) + "_" + this->electrodeConfiguration[i].hemisphere + "_" + this->electrodeConfiguration[i].target + "_" + QString::number(j);
+                QString channelName = "Lead_" + QString::number(i+1) + "_" + this->electrodeConfigurations[i].hemisphere + "_" + this->electrodeConfigurations[i].target + "_" + QString::number(j);
 
-                result = SetChannelName(this->electrodeConfiguration[i].channelID[j], (char*)channelName.toStdString().c_str(), channelName.length());
+                result = SetChannelName(this->electrodeConfigurations[i].channelID[j], (char*)channelName.toStdString().c_str(), channelName.length());
                 if (result != eAO_OK)
                 {
                     QString messsage = getErrorLog();
@@ -1308,14 +1095,14 @@ bool ControllerForm::configureRecordingChannels()
                     return false;
                 }
 
-                result = SetChannelSaveState(this->electrodeConfiguration[i].channelID[j], true);
+                result = SetChannelSaveState(this->electrodeConfigurations[i].channelID[j], true);
                 if (result != eAO_OK)
                 {
                     QString messsage = getErrorLog();
                     displayError(QMessageBox::Warning, messsage);
                     return false;
                 }
-                printf("%d:%s\n",this->electrodeConfiguration[i].channelID[j], channelName.toStdString().c_str());
+                printf("%d:%s\n",this->electrodeConfigurations[i].channelID[j], channelName.toStdString().c_str());
             }
         }
     }
@@ -1344,7 +1131,7 @@ void ControllerForm::updateAnnotation(QString annotations)
         if (annotations == "4 Contacts\nResearch Stim")
         {
             // Notify the user if the current selected electrode is not 4 contacts, this is likely a mistake made by the User
-            if (this->electrodeConfiguration[0].numContacts != 4)
+            if (this->electrodeConfigurations[0].numContacts != 4)
             {
                 displayError(QMessageBox::Warning, "Electrode Contacts Not Matching");
                 return;
@@ -1361,7 +1148,7 @@ void ControllerForm::updateAnnotation(QString annotations)
         else
         {
             // Notify the user if the current selected electrode is not 8 contacts, this is likely a mistake made by the User
-            if (this->electrodeConfiguration[0].numContacts != 8)
+            if (this->electrodeConfigurations[0].numContacts != 8)
             {
                 displayError(QMessageBox::Warning, "Electrode Contacts Not Matching");
                 return;

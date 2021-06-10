@@ -42,8 +42,9 @@ void ChannelSelectionDialog::displayError(int errorLevel, QString message)
     }
 }
 
-void ChannelSelectionDialog::configureContactNumbers(QString electrodeType, int electrodeID)
+void ChannelSelectionDialog::configureContactNumbers(QString electrodeType, int electrodeID, int channelCount)
 {
+    this->channelCount = channelCount;
     if (electrodeType == "EMG Pads" || electrodeType == "ECG Sensors")
     {
         channelCount = 4;
@@ -57,22 +58,18 @@ void ChannelSelectionDialog::configureContactNumbers(QString electrodeType, int 
     }
     else if (electrodeType == "Boston Segmented")
     {
-        channelCount = 8;
         this->electrodeType = "Lead";
     }
     else if (electrodeType == "Medtronic Segmented")
     {
-        channelCount = 8;
         this->electrodeType = "Lead";
     }
     else if (electrodeType == "Medtronic 3387")
     {
-        channelCount = 4;
         this->electrodeType = "Lead";
     }
     else if (electrodeType == "Medtronic 3389")
     {
-        channelCount = 4;
         this->electrodeType = "Lead";
     }
 

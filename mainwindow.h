@@ -27,7 +27,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <windows.h>
 
 #include "macaddressdialog.h"
+#include "electrodeconfigurations.h"
 #include "controllerform.h"
+
 #ifdef QT_DEBUG
 #include "AOSystemAPI_TEST.h"
 #else
@@ -65,6 +67,7 @@ private slots:
     void on_diagnosisSelection_currentTextChanged(const QString &text);
 
 private:
+    ElectrodeConfigurations *configurationForm;
     ControllerForm *controllerForm;
 
     Ui::MainWindow *ui;

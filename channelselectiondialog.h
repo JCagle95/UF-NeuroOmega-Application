@@ -35,7 +35,7 @@ public:
     ~ChannelSelectionDialog();
 
     void displayError(int errorLevel, QString message);
-    void configureContactNumbers(QString electrodeType, int electrodeID);
+    void configureContactNumbers(QString electrodeType, int electrodeID, int channelCount);
     void configurePredefinedChannels(int* channelIDs);
 
 signals:
