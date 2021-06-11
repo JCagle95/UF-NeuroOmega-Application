@@ -23,6 +23,13 @@ ChannelSelectionDialog::ChannelSelectionDialog(QWidget *parent) :
     ui(new Ui::ChannelSelectionDialog)
 {
     ui->setupUi(this);
+
+    scrollAreaLayout = new QGridLayout();
+    ui->ScrollAreaWidget->setLayout(scrollAreaLayout);
+
+    scrollAreaLayout->setColumnStretch(0, 2);
+    scrollAreaLayout->setColumnStretch(1, 2);
+    scrollAreaLayout->setColumnStretch(2, 3);
 }
 
 ChannelSelectionDialog::~ChannelSelectionDialog()
@@ -42,189 +49,87 @@ void ChannelSelectionDialog::displayError(int errorLevel, QString message)
     }
 }
 
+
+void ChannelSelectionDialog::addNewInputChannel(int rowID)
+{
+    InputChannelUIWidgets widgets;
+    QFont standardFont("Microsoft YaHei UI", 12);
+
+    widgets.inputName = new QLabel();
+    widgets.inputName->setText(QString("Contact #%1").arg(rowID));
+    widgets.inputName->setFont(standardFont);
+    widgets.inputName->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    widgets.inputName->setProperty("rowID", rowID);
+    scrollAreaLayout->addWidget(widgets.inputName, rowID, 0);
+
+    widgets.boxName = new QComboBox();
+    widgets.boxName->addItem("ECoG Box 01");
+    widgets.boxName->addItem("ECoG Box 02");
+    widgets.boxName->addItem("ECoG Box 03");
+    widgets.boxName->addItem("ECoG Box 04");
+    widgets.boxName->setFont(standardFont);
+    widgets.boxName->setMinimumHeight(30);
+    widgets.boxName->setProperty("rowID", rowID);
+    scrollAreaLayout->addWidget(widgets.boxName, rowID, 1);
+
+    widgets.channelName = new QComboBox();
+    for (int i = 0; i < 16; i++)
+    {
+        widgets.channelName->addItem(QString("Channel %1").arg(i+1));
+    }
+    widgets.channelName->setFont(standardFont);
+    widgets.channelName->setMinimumHeight(30);
+    widgets.channelName->setProperty("rowID", rowID);
+    scrollAreaLayout->addWidget(widgets.channelName, rowID, 2);
+
+    inputChannelWidgetsCollection.append(widgets);
+}
+
+
 void ChannelSelectionDialog::configureContactNumbers(QString electrodeType, int electrodeID, int channelCount)
 {
     this->channelCount = channelCount;
-    if (electrodeType == "EMG Pads" || electrodeType == "ECG Sensors")
-    {
-        channelCount = 4;
-        this->electrodeType = "Sensor";
-        ui->electrodeImages->setVisible(false);
-        ui->ChannelSelection_Ch1->insertItem(0, "None");
-        ui->ChannelSelection_Ch2_2->insertItem(0, "None");
-        ui->ChannelSelection_Ch3_2->insertItem(0, "None");
-        ui->ChannelSelection_Ch4->insertItem(0, "None");
-        ui->ChangeAllChannels->setHidden(true);
-    }
-    else if (electrodeType == "Boston Segmented")
-    {
-        this->electrodeType = "Lead";
-    }
-    else if (electrodeType == "Medtronic Segmented")
-    {
-        this->electrodeType = "Lead";
-    }
-    else if (electrodeType == "Medtronic 3387")
-    {
-        this->electrodeType = "Lead";
-    }
-    else if (electrodeType == "Medtronic 3389")
-    {
-        this->electrodeType = "Lead";
-    }
-
-    if (channelCount == 8)
-    {
-        ui->label_7->setText("Contact #1.2: ");
-        ui->label_8->setText("Contact #2.2: ");
-    }
-    else
-    {
-        ui->ECOGBoxSelection_Ch2_1->setVisible(false);
-        ui->ECOGBoxSelection_Ch2_3->setVisible(false);
-        ui->ECOGBoxSelection_Ch3_1->setVisible(false);
-        ui->ECOGBoxSelection_Ch3_3->setVisible(false);
-        ui->ChannelSelection_Ch2_1->setVisible(false);
-        ui->ChannelSelection_Ch2_3->setVisible(false);
-        ui->ChannelSelection_Ch3_1->setVisible(false);
-        ui->ChannelSelection_Ch3_3->setVisible(false);
-        ui->label_10->setVisible(false);
-        ui->label_11->setVisible(false);
-        ui->label_12->setVisible(false);
-        ui->label_13->setVisible(false);
-    }
-
+    for (int i = 0; i < channelCount; i++) addNewInputChannel(i);
     channelIDs = new int[channelCount];
     this->electrodeID = electrodeID;
 }
 
 void ChannelSelectionDialog::configurePredefinedChannels(int* channelIDs)
 {
-    if (channelCount == 4)
+    for (int i = 0; i < channelCount; i++)
     {
-        QComboBox *boxSelection[] = {ui->ECOGBoxSelection_Ch1, ui->ECOGBoxSelection_Ch2_2, ui->ECOGBoxSelection_Ch3_2, ui->ECOGBoxSelection_Ch4};
-        QComboBox *channelSelection[] = {ui->ChannelSelection_Ch1, ui->ChannelSelection_Ch2_2, ui->ChannelSelection_Ch3_2, ui->ChannelSelection_Ch4};
-        for (int i = 0; i < channelCount; i++)
+        if (channelIDs[i] <= 0)
         {
-            if (channelIDs[i] <= 0)
-            {
-                boxSelection[i]->setCurrentIndex(0);
-                if (this->electrodeType != "Sensor")
-                {
-                    channelSelection[i]->setCurrentIndex(i);
-                }
-                else
-                {
-                    if (i < 2)
-                    {
-                        channelSelection[i]->setCurrentIndex(i + 9);
-                    }
-                    else
-                    {
-                        channelSelection[i]->setCurrentIndex(0);
-                    }
-                }
-            }
-            else
-            {
-                int channelID = channelIDs[i] - 10272;
-                boxSelection[i]->setCurrentIndex(channelID / 16);
-
-                if (this->electrodeType != "Sensor")
-                {
-                    channelSelection[i]->setCurrentIndex(channelID % 16);
-                }
-                else
-                {
-                    channelSelection[i]->setCurrentIndex(channelID % 16 + 1);
-                }
-            }
+            inputChannelWidgetsCollection[i].boxName->setCurrentIndex(0);
+            inputChannelWidgetsCollection[i].channelName->setCurrentIndex(i);
         }
-    }
-    else
-    {
-        QComboBox *boxSelection[] = {ui->ECOGBoxSelection_Ch1, ui->ECOGBoxSelection_Ch2_3, ui->ECOGBoxSelection_Ch2_2, ui->ECOGBoxSelection_Ch2_1, ui->ECOGBoxSelection_Ch3_3, ui->ECOGBoxSelection_Ch3_2, ui->ECOGBoxSelection_Ch3_1, ui->ECOGBoxSelection_Ch4};
-        QComboBox *channelSelection[] = {ui->ChannelSelection_Ch1, ui->ChannelSelection_Ch2_3, ui->ChannelSelection_Ch2_2, ui->ChannelSelection_Ch2_1, ui->ChannelSelection_Ch3_3, ui->ChannelSelection_Ch3_2, ui->ChannelSelection_Ch3_1, ui->ChannelSelection_Ch4};
-        for (int i = 0; i < channelCount; i++)
+        else
         {
-            if (channelIDs[i] <= 0)
-            {
-                boxSelection[i]->setCurrentIndex(0);
-                channelSelection[i]->setCurrentIndex(i);
-            }
-            else
-            {
-                int channelID = channelIDs[i] - 10272;
-                boxSelection[i]->setCurrentIndex(channelID / 16);
-                channelSelection[i]->setCurrentIndex(channelID % 16);
-            }
+            int channelID = channelIDs[i] - 10272;
+            inputChannelWidgetsCollection[i].boxName->setCurrentIndex(channelID / 16);
+            inputChannelWidgetsCollection[i].channelName->setCurrentIndex(channelID % 16);
         }
     }
 }
 
 void ChannelSelectionDialog::on_ChannelConfirm_clicked()
 {
-    if (channelCount == 4)
+    for (int i = 0; i < channelCount - 1; i++)
     {
-        QComboBox *ECOGBoxSelection[] = {ui->ECOGBoxSelection_Ch1, ui->ECOGBoxSelection_Ch2_2, ui->ECOGBoxSelection_Ch3_2, ui->ECOGBoxSelection_Ch4};
-        QComboBox *ChannelSelection[] = {ui->ChannelSelection_Ch1, ui->ChannelSelection_Ch2_2, ui->ChannelSelection_Ch3_2, ui->ChannelSelection_Ch4};
-
-        for (int i = 0; i < channelCount - 1; i++)
+        for (int j = i + 1; j < channelCount; j++)
         {
-            if (this->electrodeType == "Sensor" && ChannelSelection[i]->currentIndex() == 0)
+            if (inputChannelWidgetsCollection[i].boxName->currentIndex() == inputChannelWidgetsCollection[j].boxName->currentIndex() &&
+                inputChannelWidgetsCollection[i].channelName->currentIndex() == inputChannelWidgetsCollection[j].channelName->currentIndex())
             {
-                continue;
-            }
-
-            for (int j = i + 1; j < channelCount; j++)
-            {
-                if (ECOGBoxSelection[i]->currentIndex() == ECOGBoxSelection[j]->currentIndex() && ChannelSelection[i]->currentIndex() == ChannelSelection[j]->currentIndex())
-                {
-                    displayError(QMessageBox::Critical, ECOGBoxSelection[j]->currentText() + " " + ChannelSelection[i]->currentText() + " is assigned to more than 1 contacts");
-                    return;
-                }
-            }
-        }
-
-        for (int i = 0; i < channelCount; i++)
-        {
-            if (this->electrodeType == "Lead")
-            {
-                channelIDs[i] = 10272 + (ECOGBoxSelection[i]->currentIndex() * 16 ) + ChannelSelection[i]->currentIndex();
-            }
-            else
-            {
-                if (ChannelSelection[i]->currentIndex() == 0)
-                {
-                    channelIDs[i] = -1;
-                }
-                else
-                {
-                    channelIDs[i] = 10272 + (ECOGBoxSelection[i]->currentIndex() * 16 ) + ChannelSelection[i]->currentIndex() - 1;
-                }
+                displayError(QMessageBox::Critical, inputChannelWidgetsCollection[i].boxName->currentText() + " " + inputChannelWidgetsCollection[i].channelName->currentText() + " is assigned to more than 1 contacts");
+                return;
             }
         }
     }
-    else
-    {
-        QComboBox *ECOGBoxSelection[] = {ui->ECOGBoxSelection_Ch1, ui->ECOGBoxSelection_Ch2_3, ui->ECOGBoxSelection_Ch2_2, ui->ECOGBoxSelection_Ch2_1, ui->ECOGBoxSelection_Ch3_3, ui->ECOGBoxSelection_Ch3_2, ui->ECOGBoxSelection_Ch3_1, ui->ECOGBoxSelection_Ch4};
-        QComboBox *ChannelSelection[] = {ui->ChannelSelection_Ch1, ui->ChannelSelection_Ch2_3, ui->ChannelSelection_Ch2_2, ui->ChannelSelection_Ch2_1, ui->ChannelSelection_Ch3_3, ui->ChannelSelection_Ch3_2, ui->ChannelSelection_Ch3_1, ui->ChannelSelection_Ch4};
-        for (int i = 0; i < channelCount - 1; i++)
-        {
-            for (int j = i + 1; j < channelCount; j++)
-            {
-                if (ECOGBoxSelection[i]->currentIndex() == ECOGBoxSelection[j]->currentIndex() && ChannelSelection[i]->currentIndex() == ChannelSelection[j]->currentIndex())
-                {
-                    displayError(QMessageBox::Critical, ECOGBoxSelection[j]->currentText() + " " + ChannelSelection[i]->currentText() + " is assigned to more than 1 contacts");
-                    return;
-                }
-            }
-        }
 
-        for (int i = 0; i < channelCount; i++)
-        {
-            channelIDs[i] = 10272 + (ECOGBoxSelection[i]->currentIndex() * 16) + ChannelSelection[i]->currentIndex();
-        }
+    for (int i = 0; i < channelCount; i++)
+    {
+        channelIDs[i] = 10272 + (inputChannelWidgetsCollection[i].boxName->currentIndex() * 16 ) + inputChannelWidgetsCollection[i].channelName->currentIndex();
     }
 
     emit channelIDsUpdate(channelIDs, channelCount, electrodeID);
@@ -233,25 +138,9 @@ void ChannelSelectionDialog::on_ChannelConfirm_clicked()
 
 void ChannelSelectionDialog::on_ChangeAllChannels_clicked()
 {
-    if (channelCount == 4)
+    for (int i = 0; i < channelCount; i++)
     {
-        QComboBox *ECOGBoxSelection[] = {ui->ECOGBoxSelection_Ch1, ui->ECOGBoxSelection_Ch2_2, ui->ECOGBoxSelection_Ch3_2, ui->ECOGBoxSelection_Ch4};
-        QComboBox *ChannelSelection[] = {ui->ChannelSelection_Ch1, ui->ChannelSelection_Ch2_2, ui->ChannelSelection_Ch3_2, ui->ChannelSelection_Ch4};
-
-        for (int i = 1; i < channelCount; i++)
-        {
-            ECOGBoxSelection[i]->setCurrentIndex(ECOGBoxSelection[0]->currentIndex());
-            ChannelSelection[i]->setCurrentIndex(ChannelSelection[0]->currentIndex() + i);
-        }
-    }
-    else
-    {
-        QComboBox *ECOGBoxSelection[] = {ui->ECOGBoxSelection_Ch1, ui->ECOGBoxSelection_Ch2_3, ui->ECOGBoxSelection_Ch2_2, ui->ECOGBoxSelection_Ch2_1, ui->ECOGBoxSelection_Ch3_3, ui->ECOGBoxSelection_Ch3_2, ui->ECOGBoxSelection_Ch3_1, ui->ECOGBoxSelection_Ch4};
-        QComboBox *ChannelSelection[] = {ui->ChannelSelection_Ch1, ui->ChannelSelection_Ch2_3, ui->ChannelSelection_Ch2_2, ui->ChannelSelection_Ch2_1, ui->ChannelSelection_Ch3_3, ui->ChannelSelection_Ch3_2, ui->ChannelSelection_Ch3_1, ui->ChannelSelection_Ch4};
-        for (int i = 1; i < channelCount; i++)
-        {
-            ECOGBoxSelection[i]->setCurrentIndex(ECOGBoxSelection[0]->currentIndex());
-            ChannelSelection[i]->setCurrentIndex(ChannelSelection[0]->currentIndex() + i);
-        }
+        inputChannelWidgetsCollection[i].boxName->setCurrentIndex(inputChannelWidgetsCollection[0].boxName->currentIndex());
+        inputChannelWidgetsCollection[i].channelName->setCurrentIndex(inputChannelWidgetsCollection[0].channelName->currentIndex() + i);
     }
 }

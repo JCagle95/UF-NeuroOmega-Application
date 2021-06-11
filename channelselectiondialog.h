@@ -20,11 +20,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <QDialog>
 #include <QMessageBox>
+#include <QComboBox>
 #include <QString>
+#include <QLayout>
 
 namespace Ui {
 class ChannelSelectionDialog;
 }
+
+typedef struct InputChannelUIWidgets
+{
+    QLabel *inputName;
+    QComboBox *boxName;
+    QComboBox *channelName;
+} InputChannelUIWidgets;
 
 class ChannelSelectionDialog : public QDialog
 {
@@ -35,6 +44,7 @@ public:
     ~ChannelSelectionDialog();
 
     void displayError(int errorLevel, QString message);
+    void addNewInputChannel(int rowID);
     void configureContactNumbers(QString electrodeType, int electrodeID, int channelCount);
     void configurePredefinedChannels(int* channelIDs);
 
@@ -47,6 +57,8 @@ private slots:
 
 private:
     Ui::ChannelSelectionDialog *ui;
+    QList<InputChannelUIWidgets> inputChannelWidgetsCollection;
+    QGridLayout *scrollAreaLayout;
 
     QString electrodeType;
     int electrodeID = 0;
