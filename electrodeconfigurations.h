@@ -33,8 +33,8 @@ typedef struct ElectrodeInformation
     QString electrodeType = "";
     QString hemisphere = "";
     QString target = "";
-    int channelID[8] = {0};
     QVector<int> channelIDs;
+    int layoutSize[2] = {0};
     int numContacts = 0;
     bool verified = false;
 } ElectrodeInformation;

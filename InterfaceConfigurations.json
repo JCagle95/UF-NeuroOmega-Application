@@ -18,7 +18,13 @@
     },
     {
       "ElectrodeName": "ECoG - 24",
-      "ChannelCount": 24
+      "ChannelCount": 24,
+      "Arrange": [2,12]
+    },
+    {
+      "ElectrodeName": "ECoG - 4",
+      "ChannelCount": 4,
+      "Arrange": [1,4]
     }
   ],
   "TargetDefinitions": [

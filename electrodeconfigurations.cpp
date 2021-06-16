@@ -25,6 +25,7 @@ ElectrodeConfigurations::ElectrodeConfigurations(QWidget *parent) :
     for (int i = 0; i < electrodeDefinitions.size(); i++)
     {
         availableElectrodeNames.append(electrodeDefinitions[i].toObject()["ElectrodeName"].toString());
+        for (int j = 0; j < 2; j++) electrodeDefinitions[i].toObject()["layoutSize"].toArray()[j].toInt();
     }
 
     // Load Target Names
@@ -153,6 +154,10 @@ void ElectrodeConfigurations::on_electrodeNameChanged()
         if (electrodeDefinitions[i].toObject()["ElectrodeName"].toString() == electrodeWidgetsCollection[channelID].electrodeName->currentText())
         {
             electrodeInfoCollection[channelID].numContacts = electrodeDefinitions[i].toObject()["ChannelCount"].toInt();
+            if (electrodeWidgetsCollection[channelID].electrodeName->currentText().contains("ECoG"))
+            {
+                for (int j = 0; j < 2; j++) electrodeInfoCollection[channelID].layoutSize[j] = electrodeDefinitions[i].toObject()["Arrange"].toArray()[j].toInt();
+            }
         }
     }
 
