@@ -36,6 +36,17 @@ ControllerForm::ControllerForm(QWidget *parent) :
     ui->StimulationContact_Ring01->setHidden(true);
     ui->StimulationContact_Ring02->setHidden(true);
 
+    electrodeLayout = new QGridLayout();
+    ui->ElectrodeLayoutWidget->setLayout(electrodeLayout);
+
+    naturalButtonStyle = "QPushButton {";
+    naturalButtonStyle += "border-style: outset;";
+    naturalButtonStyle += "border-width: 2px;";
+    naturalButtonStyle += "border-radius: [RADIUS]px;";
+    naturalButtonStyle += "border-color: black;";
+    naturalButtonStyle += "background-color: [COLOR];";
+    naturalButtonStyle += "}";
+
     // Status Timer for Periodic Connection Checks
     connectionCheck = new QTimer(this);
     connect(connectionCheck, &QTimer::timeout, this, &ControllerForm::checkStatus);
@@ -323,6 +334,18 @@ void ControllerForm::configureElectrodes(QList<ElectrodeInformation> electrodeIn
 // Initial Electrode Setup. This is a UI-updating function after electrode configuration is completed.
 void ControllerForm::setupElectrodeButtons(QString electrodeName)
 {
+    ui->ElectrodeLayoutWidget->setStyleSheet("");
+
+    noneStyle = naturalButtonStyle;
+    cathodeStyle = naturalButtonStyle;
+    anodeStyle = naturalButtonStyle;
+    noneStyle.replace("[COLOR]","transparent");
+    cathodeStyle.replace("[COLOR]","rgb(83, 175, 255)");
+    anodeStyle.replace("[COLOR]","rgb(255, 88, 99)");
+
+    for (int i = 0; i < displayChannelButtons.size(); i++) delete(displayChannelButtons[i]);
+    displayChannelButtons.clear();
+
     // UI update, reset all contacts to hidden
     QPushButton *allButtons[] = {ui->StimulationContact_E00,
                                      ui->StimulationContact_E01_1, ui->StimulationContact_E01_2, ui->StimulationContact_E01_3,
@@ -349,9 +372,9 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
         {
             ui->StimulationContact_E01_1->setText("Micro\n01");
             ui->StimulationContact_E01_1->setProperty("ChannelID", 10000);
-            ui->StimulationContact_E01_1->setStyleSheet("");
+            ui->StimulationContact_E01_1->setStyleSheet(noneStyle);
             ui->StimulationContact_E01_1->setHidden(false);
-            this->currentElectrodeConfiguration.channelID[channelIndex] = 10000;
+            this->currentElectrodeConfiguration.channelIDs.append(10000);
             channelIndex++;
         }
 
@@ -362,9 +385,9 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
         {
             ui->StimulationContact_E02_1->setText("Macro\n01");
             ui->StimulationContact_E02_1->setProperty("ChannelID", 10005);
-            ui->StimulationContact_E02_1->setStyleSheet("");
+            ui->StimulationContact_E02_1->setStyleSheet(noneStyle);
             ui->StimulationContact_E02_1->setHidden(false);
-            this->currentElectrodeConfiguration.channelID[channelIndex] = 10005;
+            this->currentElectrodeConfiguration.channelIDs.append(10005);
             channelIndex++;
         }
 
@@ -375,9 +398,9 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
         {
             ui->StimulationContact_E01_3->setText("Micro\n02");
             ui->StimulationContact_E01_3->setProperty("ChannelID", 10001);
-            ui->StimulationContact_E01_3->setStyleSheet("");
+            ui->StimulationContact_E01_3->setStyleSheet(noneStyle);
             ui->StimulationContact_E01_3->setHidden(false);
-            this->currentElectrodeConfiguration.channelID[channelIndex] = 10001;
+            this->currentElectrodeConfiguration.channelIDs.append(10001);
             channelIndex++;
         }
 
@@ -388,9 +411,9 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
         {
             ui->StimulationContact_E02_3->setText("Macro\n02");
             ui->StimulationContact_E02_3->setProperty("ChannelID", 10006);
-            ui->StimulationContact_E02_3->setStyleSheet("");
+            ui->StimulationContact_E02_3->setStyleSheet(noneStyle);
             ui->StimulationContact_E02_3->setHidden(false);
-            this->currentElectrodeConfiguration.channelID[channelIndex] = 10006;
+            this->currentElectrodeConfiguration.channelIDs.append(10006);
             channelIndex++;
         }
     }
@@ -408,7 +431,34 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
         this->currentElectrodeConfiguration = this->electrodeConfigurations[electrodeID];
 
         // Handle Configuration for 4-contact electrodes
-        if (this->electrodeConfigurations[electrodeID].numContacts == 4)
+        if (this->currentElectrodeConfiguration.electrodeType.contains("ECoG"))
+        {
+            ui->StimulationContact_Ring01->setHidden(true);
+            ui->StimulationContact_Ring02->setHidden(true);
+            ui->ElectrodeLayoutWidget->setStyleSheet("#ElectrodeLayoutWidget {background-image: url(" + QDir::currentPath() + "/resources/ECoG_Background.png);}");
+
+            int estimatedHeight = 500/this->electrodeConfigurations[electrodeID].layoutSize[1]*0.8;
+
+            noneStyle.replace("[RADIUS]",QString::number(estimatedHeight/2));
+            cathodeStyle.replace("[RADIUS]",QString::number(estimatedHeight/2));
+            anodeStyle.replace("[RADIUS]",QString::number(estimatedHeight/2));
+
+            for (int i = 0; i < this->electrodeConfigurations[electrodeID].numContacts; i++)
+            {
+                QPushButton *button = new QPushButton();
+                button->setFixedSize(estimatedHeight,estimatedHeight);
+                button->setStyleSheet(noneStyle);
+                button->setFlat(true);
+                button->setText(QString::number(i));
+                button->setProperty("ChannelID", this->electrodeConfigurations[electrodeID].channelIDs[i]);
+                button->connect(button, &QPushButton::clicked, this, &ControllerForm::on_StimulationContactClicked);
+                electrodeLayout->addWidget(button, i % this->electrodeConfigurations[electrodeID].layoutSize[1], i / this->electrodeConfigurations[electrodeID].layoutSize[1]);
+                displayChannelButtons.append(button);
+            }
+            ui->StimulationContact_GlobalCAN->setStyleSheet(noneStyle);
+
+        }
+        else if (this->electrodeConfigurations[electrodeID].numContacts == 4)
         {
             ui->StimulationContact_Ring01->setHidden(true);
             ui->StimulationContact_Ring02->setHidden(true);
@@ -416,8 +466,8 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
             for (int i = 0; i < 4; i++)
             {
                 contactButtons[i]->setText("Contact\n" + QString::number(i));
-                contactButtons[i]->setProperty("ChannelID", this->electrodeConfigurations[electrodeID].channelID[i]);
-                contactButtons[i]->setStyleSheet("");
+                contactButtons[i]->setProperty("ChannelID", this->electrodeConfigurations[electrodeID].channelIDs[i]);
+                contactButtons[i]->setStyleSheet(noneStyle);
                 contactButtons[i]->setHidden(false);
             }
         }
@@ -432,8 +482,8 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
             {
                 int ringID = ((i - 1) / 3) + 1;
                 contactButtons[i]->setText("Contact\n" + QString::number(ringID) + "." + QString::number(i - (ringID - 1) * 3));
-                contactButtons[i]->setProperty("ChannelID", this->electrodeConfigurations[electrodeID].channelID[i]);
-                contactButtons[i]->setStyleSheet("");
+                contactButtons[i]->setProperty("ChannelID", this->electrodeConfigurations[electrodeID].channelIDs[i]);
+                contactButtons[i]->setStyleSheet(noneStyle);
                 contactButtons[i]->setHidden(false);
             }
             contactButtons[0]->setText("Contact\n" + QString::number(0));
@@ -448,23 +498,17 @@ void ControllerForm::on_StimulationControl_Electrode_currentTextChanged(const QS
     setupElectrodeButtons(electrodeName);
     StimulationAnode.clear();
     StimulationCathode = 0;
-    ui->StimulationContact_GlobalCAN->setStyleSheet("");
+    ui->StimulationContact_GlobalCAN->setStyleSheet(noneStyle);
 }
 
 // Quick reset for all electrode cathodes. This will be execute every time electrode selector changes.
 void ControllerForm::resetCathodeSelection()
 {
-    QPushButton *allButtons[] = {ui->StimulationContact_E00,
-                                 ui->StimulationContact_E01_1, ui->StimulationContact_E01_2, ui->StimulationContact_E01_3,
-                                 ui->StimulationContact_E02_1, ui->StimulationContact_E02_2, ui->StimulationContact_E02_3,
-                                 ui->StimulationContact_E03,
-                                 ui->StimulationContact_GlobalCAN};
-
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < displayChannelButtons.size(); i++)
     {
-        if (allButtons[i]->styleSheet() == cathodeStyle)
+        if (displayChannelButtons[i]->styleSheet() == cathodeStyle)
         {
-            allButtons[i]->setStyleSheet(noneStyle);
+            displayChannelButtons[i]->setStyleSheet(noneStyle);
         }
     }
 }
@@ -475,7 +519,7 @@ void ControllerForm::on_StimulationContact_GlobalCAN_clicked()
     if (StimulationCathode == -1)
     {
         StimulationCathode = 0;
-        ui->StimulationContact_GlobalCAN->setStyleSheet("");
+        ui->StimulationContact_GlobalCAN->setStyleSheet(noneStyle);
     }
     else
     {
@@ -799,7 +843,7 @@ void ControllerForm::startSequentialStimulation()
                 {
                     // Stimulation Contacts
                     QJsonArray stimulationContactArray = stimulationSequences[i].toObject()["StimulationChannel"].toArray();
-                    int *channelIDs = this->electrodeConfigurations[stimulationSequences[i].toObject()["StimulationLead"].toInt()].channelID;
+                    QVector<int> electrodeContacts = this->electrodeConfigurations[stimulationSequences[i].toObject()["StimulationLead"].toInt()].channelIDs;
 
                     if (stimulationSequences[i].toObject()["StimulationReturn"].toInt() > this->electrodeConfigurations[stimulationSequences[i].toObject()["StimulationLead"].toInt()].numContacts ||
                         stimulationSequences[i].toObject()["StimulationReturn"].toInt() < -1)
@@ -812,7 +856,7 @@ void ControllerForm::startSequentialStimulation()
                     int returnContact = -1;
                     if (stimulationSequences[i].toObject()["StimulationReturn"].toInt() != -1)
                     {
-                        returnContact = *(channelIDs + stimulationSequences[i].toObject()["StimulationReturn"].toInt());
+                        returnContact = electrodeContacts[stimulationSequences[i].toObject()["StimulationReturn"].toInt()];
                     }
 
                     if (stimulationSequences[i].toObject()["RecordingFilename"].toString() != currentProgrammedFilename)
@@ -849,7 +893,7 @@ void ControllerForm::startSequentialStimulation()
                                 return;
                             }
 
-                            int result = StartAnalogStimulation(*(channelIDs + stimulationContactArray[j].toInt()), 0, -1, stimulationSequences[i].toObject()["Duration"].toInt(), returnContact);
+                            int result = StartAnalogStimulation(electrodeContacts[stimulationContactArray[j].toInt()], 0, -1, stimulationSequences[i].toObject()["Duration"].toInt(), returnContact);
                             if (result != eAO_OK)
                             {
                                 QString messsage = getErrorLog();
@@ -888,7 +932,7 @@ void ControllerForm::startSequentialStimulation()
                                                                   stimulationSequences[i].toObject()["Frequency"].toInt(),
                                                                   stimulationSequences[i].toObject()["Duration"].toInt(),
                                                                   returnContact,
-                                                                  *(channelIDs + stimulationContactArray[j].toInt()), 0, 0);
+                                                                  electrodeContacts[stimulationContactArray[j].toInt()], 0, 0);
                             if (result != eAO_OK)
                             {
                                 QString messsage = getErrorLog();
@@ -901,7 +945,7 @@ void ControllerForm::startSequentialStimulation()
 
                         for (int j = 0; j < stimulationContactArray.size(); j++)
                         {
-                            int result = StartStimulation(*(channelIDs + stimulationContactArray[j].toInt()));
+                            int result = StartStimulation(electrodeContacts[stimulationContactArray[j].toInt()]);
                             if (result != eAO_OK)
                             {
                                 QString messsage = getErrorLog();
@@ -1075,9 +1119,9 @@ bool ControllerForm::configureRecordingChannels()
     {
         for (int j = 0; j < this->electrodeConfigurations[i].numContacts; j++)
         {
-            if (this->electrodeConfigurations[i].channelID[j] > 0)
+            if (this->electrodeConfigurations[i].channelIDs[j] > 0)
             {
-                int result = SetChannelName(this->electrodeConfigurations[i].channelID[j], "temp", 4);
+                int result = SetChannelName(this->electrodeConfigurations[i].channelIDs[j], "temp", 4);
                 if (result != eAO_OK)
                 {
                     QString messsage = getErrorLog();
@@ -1087,7 +1131,7 @@ bool ControllerForm::configureRecordingChannels()
 
                 QString channelName = "Lead_" + QString::number(i+1) + "_" + this->electrodeConfigurations[i].hemisphere + "_" + this->electrodeConfigurations[i].target + "_" + QString::number(j);
 
-                result = SetChannelName(this->electrodeConfigurations[i].channelID[j], (char*)channelName.toStdString().c_str(), channelName.length());
+                result = SetChannelName(this->electrodeConfigurations[i].channelIDs[j], (char*)channelName.toStdString().c_str(), channelName.length());
                 if (result != eAO_OK)
                 {
                     QString messsage = getErrorLog();
@@ -1095,14 +1139,14 @@ bool ControllerForm::configureRecordingChannels()
                     return false;
                 }
 
-                result = SetChannelSaveState(this->electrodeConfigurations[i].channelID[j], true);
+                result = SetChannelSaveState(this->electrodeConfigurations[i].channelIDs[j], true);
                 if (result != eAO_OK)
                 {
                     QString messsage = getErrorLog();
                     displayError(QMessageBox::Warning, messsage);
                     return false;
                 }
-                printf("%d:%s\n",this->electrodeConfigurations[i].channelID[j], channelName.toStdString().c_str());
+                printf("%d:%s\n",this->electrodeConfigurations[i].channelIDs[j], channelName.toStdString().c_str());
             }
         }
     }
@@ -1441,7 +1485,7 @@ void ControllerForm::on_RealtimeStreamDisplay_clicked()
     if (ui->StimulationControl_Electrode->currentText() != "" && streamView == NULL)
     {
         streamView = new RealtimeStream();
-        streamView->initializeElectrode(ui->StimulationControl_Electrode->currentText(), this->currentElectrodeConfiguration.channelID);
+        streamView->initializeElectrode(ui->StimulationControl_Electrode->currentText(), this->currentElectrodeConfiguration.channelIDs);
         connect(streamView, &RealtimeStream::windowClosed, this, &ControllerForm::streamWindowClosed);
         streamView->show();
     }

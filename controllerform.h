@@ -130,6 +130,8 @@ private:
 
     // List holding all electrodes
     QList<ElectrodeInformation> electrodeConfigurations;
+    QList<QPushButton*> displayChannelButtons;
+    QGridLayout *electrodeLayout;
 
     // Cathode is "+", Anode is "-". The Global Return can only be cathode "+".
     // There can only be 1 return channel in this program to simply things.
@@ -140,6 +142,7 @@ private:
     QString anodeStyle = "QPushButton {background-color: rgb(255, 88, 99); border: none}";
     QString cathodeStyle = "QPushButton {background-color: rgb(83, 175, 255); border: none}";
     QString noneStyle = "";
+    QString naturalButtonStyle = "";
 
     // Initialization of QTimer variables. These are used for periodic tasks.
     QTimer *connectionCheck;

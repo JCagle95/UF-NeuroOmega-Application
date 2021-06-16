@@ -83,8 +83,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>350</y>
+      <x>590</x>
+      <y>170</y>
       <width>181</width>
       <height>81</height>
      </rect>
@@ -312,8 +312,8 @@
    <widget class="QLabel" name="label_12">
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>369</y>
+      <x>420</x>
+      <y>189</y>
       <width>161</width>
       <height>41</height>
      </rect>
@@ -334,8 +334,8 @@
    <widget class="QLabel" name="label_13">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>450</y>
+      <x>490</x>
+      <y>270</y>
       <width>141</width>
       <height>30</height>
      </rect>
@@ -359,8 +359,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>450</y>
+      <x>650</x>
+      <y>270</y>
       <width>121</width>
       <height>30</height>
      </rect>
@@ -399,8 +399,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>490</y>
+      <x>650</x>
+      <y>310</y>
       <width>121</width>
       <height>30</height>
      </rect>
@@ -436,8 +436,8 @@
    <widget class="QLabel" name="label_14">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>490</y>
+      <x>490</x>
+      <y>310</y>
       <width>141</width>
       <height>30</height>
      </rect>
@@ -455,182 +455,11 @@
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QComboBox" name="StimulationControl_Electrode">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>370</y>
-      <width>261</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Microsoft YaHei UI</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="StimulationContact_E03">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>430</y>
-      <width>80</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Microsoft YaHei UI</family>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="StimulationContact_E02_2">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>490</y>
-      <width>80</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Microsoft YaHei UI</family>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="StimulationContact_E02_1">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>490</y>
-      <width>80</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Microsoft YaHei UI</family>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="StimulationContact_E02_3">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>490</y>
-      <width>80</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Microsoft YaHei UI</family>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="StimulationContact_E01_2">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>550</y>
-      <width>80</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Microsoft YaHei UI</family>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="StimulationContact_E01_3">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>550</y>
-      <width>80</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Microsoft YaHei UI</family>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="StimulationContact_E01_1">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>550</y>
-      <width>80</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Microsoft YaHei UI</family>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="StimulationContact_E00">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>610</y>
-      <width>80</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Microsoft YaHei UI</family>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_15">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>310</y>
+      <x>230</x>
+      <y>40</y>
       <width>351</width>
       <height>31</height>
      </rect>
@@ -651,8 +480,8 @@
    <widget class="QLabel" name="label_16">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>670</y>
+      <x>460</x>
+      <y>510</y>
       <width>141</width>
       <height>21</height>
      </rect>
@@ -710,8 +539,8 @@
    <widget class="QLabel" name="label_17">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>690</y>
+      <x>640</x>
+      <y>510</y>
       <width>141</width>
       <height>20</height>
      </rect>
@@ -1171,36 +1000,11 @@
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="StimulationContact_GlobalCAN">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>610</y>
-      <width>80</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Microsoft YaHei UI</family>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-    <property name="autoFillBackground">
-     <bool>false</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true"/>
-    </property>
-    <property name="text">
-     <string>Monopolar</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_18">
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>530</y>
+      <x>420</x>
+      <y>350</y>
       <width>211</width>
       <height>30</height>
      </rect>
@@ -1224,8 +1028,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>530</y>
+      <x>650</x>
+      <y>350</y>
       <width>121</width>
       <height>30</height>
      </rect>
@@ -1264,8 +1068,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>440</x>
-      <y>580</y>
+      <x>450</x>
+      <y>400</y>
       <width>151</width>
       <height>71</height>
      </rect>
@@ -1287,8 +1091,8 @@ Stimulation</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>580</y>
+      <x>630</x>
+      <y>400</y>
       <width>151</width>
       <height>71</height>
      </rect>
@@ -1336,9 +1140,9 @@ Stimulation</string>
    <widget class="QProgressBar" name="StimulationProgressBar">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>680</y>
-      <width>321</width>
+      <x>450</x>
+      <y>480</y>
+      <width>351</width>
       <height>27</height>
      </rect>
     </property>
@@ -1460,32 +1264,6 @@ Recording</string>
     <property name="text">
      <string>Advance
 Configurations</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="StimulationContact_Ring02">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>510</y>
-      <width>50</width>
-      <height>10</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="StimulationContact_Ring01">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>570</y>
-      <width>50</width>
-      <height>10</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
     </property>
    </widget>
    <widget class="Line" name="line_3">
@@ -2257,6 +2035,308 @@ Sequence</string>
 Stream Output</string>
     </property>
    </widget>
+   <widget class="QWidget" name="ElectrodeLayoutWidget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>140</y>
+      <width>340</width>
+      <height>570</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <widget class="QPushButton" name="StimulationContact_Ring01">
+     <property name="geometry">
+      <rect>
+       <x>9</x>
+       <y>290</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="StimulationContact_E01_1">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>270</y>
+       <width>80</width>
+       <height>50</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="StimulationContact_E00">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>330</y>
+       <width>80</width>
+       <height>50</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="StimulationContact_E02_1">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>210</y>
+       <width>80</width>
+       <height>50</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="StimulationContact_E01_2">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>270</y>
+       <width>80</width>
+       <height>50</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="StimulationContact_E01_3">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>270</y>
+       <width>80</width>
+       <height>50</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="StimulationContact_Ring02">
+     <property name="geometry">
+      <rect>
+       <x>9</x>
+       <y>230</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="StimulationContact_E02_2">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>210</y>
+       <width>80</width>
+       <height>50</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="StimulationContact_E02_3">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>210</y>
+       <width>80</width>
+       <height>50</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="StimulationContact_E03">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>150</y>
+       <width>80</width>
+       <height>50</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QComboBox" name="StimulationControl_Electrode">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>90</y>
+      <width>341</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Microsoft YaHei UI</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="StimulationContact_GlobalCAN">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>550</y>
+      <width>101</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Microsoft YaHei UI</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Monopolar</string>
+    </property>
+   </widget>
+   <zorder>ElectrodeLayoutWidget</zorder>
+   <zorder>label</zorder>
+   <zorder>label_2</zorder>
+   <zorder>patientID_label</zorder>
+   <zorder>StimulationControl_Amplitude</zorder>
+   <zorder>label_11</zorder>
+   <zorder>groupBox</zorder>
+   <zorder>line_2</zorder>
+   <zorder>label_12</zorder>
+   <zorder>label_13</zorder>
+   <zorder>StimulationControl_Pulsewidth</zorder>
+   <zorder>StimulationControl_Frequency</zorder>
+   <zorder>label_14</zorder>
+   <zorder>label_15</zorder>
+   <zorder>label_16</zorder>
+   <zorder>label_17</zorder>
+   <zorder>label_18</zorder>
+   <zorder>StimulationControl_Duration</zorder>
+   <zorder>StimulationControl_Start</zorder>
+   <zorder>StimulationControl_Stop</zorder>
+   <zorder>NeuroOmega_StatusString</zorder>
+   <zorder>StimulationProgressBar</zorder>
+   <zorder>NeuroOmega_RecordingStart</zorder>
+   <zorder>NeuroOmega_RecordingStop</zorder>
+   <zorder>label_21</zorder>
+   <zorder>RecordingDurationLabel</zorder>
+   <zorder>Electrodes_AdvanceConfiguration</zorder>
+   <zorder>line_3</zorder>
+   <zorder>label_19</zorder>
+   <zorder>label_20</zorder>
+   <zorder>label_22</zorder>
+   <zorder>TremorScale_1</zorder>
+   <zorder>TremorScale_2</zorder>
+   <zorder>TremorScale_3</zorder>
+   <zorder>TremorScale_4</zorder>
+   <zorder>TremorScale_5</zorder>
+   <zorder>RigidScale_2</zorder>
+   <zorder>label_23</zorder>
+   <zorder>RigidScale_3</zorder>
+   <zorder>RigidScale_4</zorder>
+   <zorder>RigidScale_1</zorder>
+   <zorder>RigidScale_5</zorder>
+   <zorder>label_24</zorder>
+   <zorder>BradyScale_2</zorder>
+   <zorder>BradyScale_4</zorder>
+   <zorder>BradyScale_1</zorder>
+   <zorder>BradyScale_3</zorder>
+   <zorder>BradyScale_5</zorder>
+   <zorder>SideEffectsLabels_1</zorder>
+   <zorder>SideEffectsLabels_2</zorder>
+   <zorder>SideEffectsLabels_3</zorder>
+   <zorder>SideEffectsLabels_4</zorder>
+   <zorder>SideEffectsLabels_5</zorder>
+   <zorder>SideEffectsLabels_6</zorder>
+   <zorder>SideEffectsLabels_7</zorder>
+   <zorder>SideEffectsLabels_8</zorder>
+   <zorder>TransientSideEffectsLabel</zorder>
+   <zorder>PersistentSideEffectsLabel</zorder>
+   <zorder>StimulationControl_Novel</zorder>
+   <zorder>StimulationControl_Novel_Start</zorder>
+   <zorder>SequenceFilename</zorder>
+   <zorder>RealtimeStreamDisplay</zorder>
+   <zorder>StimulationControl_Electrode</zorder>
+   <zorder>StimulationContact_GlobalCAN</zorder>
   </widget>
  </widget>
  <resources/>
