@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QComboBox>
 #include <QString>
 #include <QLayout>
+#include <QTableWidget>
 
 namespace Ui {
 class ChannelSelectionDialog;
@@ -30,7 +31,7 @@ class ChannelSelectionDialog;
 
 typedef struct InputChannelUIWidgets
 {
-    QLabel *inputName;
+    QTableWidgetItem *inputName;
     QComboBox *boxName;
     QComboBox *channelName;
 } InputChannelUIWidgets;
@@ -54,11 +55,13 @@ signals:
 private slots:
     void on_ChannelConfirm_clicked();
     void on_ChangeAllChannels_clicked();
+    void batchSelectionChanged();
+    void batchChangeECoGBox(int index);
 
 private:
     Ui::ChannelSelectionDialog *ui;
     QList<InputChannelUIWidgets> inputChannelWidgetsCollection;
-    QGridLayout *scrollAreaLayout;
+    QList<int> selectedRows;
 
     QString electrodeType;
     int electrodeID = 0;

@@ -23,13 +23,11 @@ ChannelSelectionDialog::ChannelSelectionDialog(QWidget *parent) :
     ui(new Ui::ChannelSelectionDialog)
 {
     ui->setupUi(this);
-
-    scrollAreaLayout = new QGridLayout();
-    ui->ScrollAreaWidget->setLayout(scrollAreaLayout);
-
-    scrollAreaLayout->setColumnStretch(0, 2);
-    scrollAreaLayout->setColumnStretch(1, 2);
-    scrollAreaLayout->setColumnStretch(2, 3);
+    ui->ChannelTableWidget->setColumnWidth(0, 138);
+    ui->ChannelTableWidget->setColumnWidth(1, 140);
+    ui->ChannelTableWidget->setColumnWidth(2, 140);
+    ui->ChannelTableWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    connect(ui->ChannelTableWidget, &QTableWidget::itemSelectionChanged, this, &ChannelSelectionDialog::batchSelectionChanged);
 }
 
 ChannelSelectionDialog::~ChannelSelectionDialog()
@@ -54,13 +52,15 @@ void ChannelSelectionDialog::addNewInputChannel(int rowID)
 {
     InputChannelUIWidgets widgets;
     QFont standardFont("Microsoft YaHei UI", 12);
+    ui->ChannelTableWidget->insertRow(rowID);
 
-    widgets.inputName = new QLabel();
+    widgets.inputName = new QTableWidgetItem();
     widgets.inputName->setText(QString("Contact #%1").arg(rowID));
     widgets.inputName->setFont(standardFont);
-    widgets.inputName->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    widgets.inputName->setProperty("rowID", rowID);
-    scrollAreaLayout->addWidget(widgets.inputName, rowID, 0);
+    //widgets.inputName->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    //widgets.inputName->setProperty("rowID", rowID);
+    ui->ChannelTableWidget->setItem(rowID, 0, widgets.inputName);
+
 
     widgets.boxName = new QComboBox();
     widgets.boxName->addItem("ECoG Box 01");
@@ -68,9 +68,9 @@ void ChannelSelectionDialog::addNewInputChannel(int rowID)
     widgets.boxName->addItem("ECoG Box 03");
     widgets.boxName->addItem("ECoG Box 04");
     widgets.boxName->setFont(standardFont);
-    widgets.boxName->setMinimumHeight(30);
     widgets.boxName->setProperty("rowID", rowID);
-    scrollAreaLayout->addWidget(widgets.boxName, rowID, 1);
+    widgets.boxName->connect(widgets.boxName, &QComboBox::currentIndexChanged, this, &ChannelSelectionDialog::batchChangeECoGBox);
+    ui->ChannelTableWidget->setCellWidget(rowID, 1, widgets.boxName);
 
     widgets.channelName = new QComboBox();
     for (int i = 0; i < 16; i++)
@@ -78,9 +78,8 @@ void ChannelSelectionDialog::addNewInputChannel(int rowID)
         widgets.channelName->addItem(QString("Channel %1").arg(i+1));
     }
     widgets.channelName->setFont(standardFont);
-    widgets.channelName->setMinimumHeight(30);
     widgets.channelName->setProperty("rowID", rowID);
-    scrollAreaLayout->addWidget(widgets.channelName, rowID, 2);
+    ui->ChannelTableWidget->setCellWidget(rowID, 2, widgets.channelName);
 
     inputChannelWidgetsCollection.append(widgets);
 }
@@ -100,8 +99,24 @@ void ChannelSelectionDialog::configurePredefinedChannels(int* channelIDs)
     {
         if (channelIDs[i] <= 0)
         {
-            inputChannelWidgetsCollection[i].boxName->setCurrentIndex(0);
-            inputChannelWidgetsCollection[i].channelName->setCurrentIndex(i);
+            if (channelCount > 16)
+            {
+                if (i >= channelCount / 2)
+                {
+                    inputChannelWidgetsCollection[i].boxName->setCurrentIndex(1);
+                    inputChannelWidgetsCollection[i].channelName->setCurrentIndex(i - channelCount/2);
+                }
+                else
+                {
+                    inputChannelWidgetsCollection[i].boxName->setCurrentIndex(0);
+                    inputChannelWidgetsCollection[i].channelName->setCurrentIndex(i);
+                }
+            }
+            else
+            {
+                inputChannelWidgetsCollection[i].boxName->setCurrentIndex(0);
+                inputChannelWidgetsCollection[i].channelName->setCurrentIndex(i);
+            }
         }
         else
         {
@@ -136,11 +151,50 @@ void ChannelSelectionDialog::on_ChannelConfirm_clicked()
     this->close();
 }
 
+void ChannelSelectionDialog::batchSelectionChanged()
+{
+    if (ui->ChannelTableWidget->selectedItems().size() > 0)
+    {
+        selectedRows.clear();
+        for (int i = 0; i < ui->ChannelTableWidget->selectedItems().size(); i++)
+        {
+            selectedRows.append(ui->ChannelTableWidget->selectedItems()[i]->row());
+        }
+    }
+}
+
+void ChannelSelectionDialog::batchChangeECoGBox(int index)
+{
+    QComboBox* button = qobject_cast<QComboBox*>(sender());
+    if (selectedRows.contains(button->property("rowID")))
+    {
+        for (int i = 0; i < selectedRows.size(); i++)
+        {
+            QComboBox *selector = (QComboBox*)ui->ChannelTableWidget->cellWidget(selectedRows[i], 1);
+            selector->setCurrentIndex(index);
+        }
+    }
+    selectedRows.clear();
+}
+
 void ChannelSelectionDialog::on_ChangeAllChannels_clicked()
 {
-    for (int i = 0; i < channelCount; i++)
+    for (int i = 0; i < inputChannelWidgetsCollection[0].boxName->count(); i++)
     {
-        inputChannelWidgetsCollection[i].boxName->setCurrentIndex(inputChannelWidgetsCollection[0].boxName->currentIndex());
-        inputChannelWidgetsCollection[i].channelName->setCurrentIndex(inputChannelWidgetsCollection[0].channelName->currentIndex() + i);
+        int nextChannelIndex = -1;
+        for (int j = 0; j < channelCount; j++)
+        {
+            if (inputChannelWidgetsCollection[j].boxName->currentIndex() == i)
+            {
+                if (nextChannelIndex < 0)
+                {
+                    nextChannelIndex = inputChannelWidgetsCollection[j].channelName->currentIndex() + 1;
+                }
+                else
+                {
+                    inputChannelWidgetsCollection[j].channelName->setCurrentIndex(nextChannelIndex++);
+                }
+            }
+        }
     }
 }
