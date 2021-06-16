@@ -38,7 +38,7 @@ public:
     ~RealtimeStream();
     void closeEvent(QCloseEvent *event);
 
-    void initializeElectrode(QString electrodeName, int electrodeConfiguration[8]);
+    void initializeElectrode(QString electrodeName, QVector<int> electrodeConfiguration);
     void requestProcsesing(QString processingType, QString header, int16* pData, int size);
     void responseParser(QNetworkReply *reply);
     void updateData(void);

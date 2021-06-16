@@ -2051,7 +2051,7 @@ Stream Output</string>
      <property name="geometry">
       <rect>
        <x>9</x>
-       <y>290</y>
+       <y>360</y>
        <width>31</width>
        <height>16</height>
       </rect>
@@ -2064,7 +2064,7 @@ Stream Output</string>
      <property name="geometry">
       <rect>
        <x>50</x>
-       <y>270</y>
+       <y>340</y>
        <width>80</width>
        <height>50</height>
       </rect>
@@ -2083,7 +2083,7 @@ Stream Output</string>
      <property name="geometry">
       <rect>
        <x>140</x>
-       <y>330</y>
+       <y>480</y>
        <width>80</width>
        <height>50</height>
       </rect>
@@ -2121,7 +2121,7 @@ Stream Output</string>
      <property name="geometry">
       <rect>
        <x>140</x>
-       <y>270</y>
+       <y>340</y>
        <width>80</width>
        <height>50</height>
       </rect>
@@ -2140,7 +2140,7 @@ Stream Output</string>
      <property name="geometry">
       <rect>
        <x>230</x>
-       <y>270</y>
+       <y>340</y>
        <width>80</width>
        <height>50</height>
       </rect>
@@ -2210,7 +2210,7 @@ Stream Output</string>
      <property name="geometry">
       <rect>
        <x>140</x>
-       <y>150</y>
+       <y>60</y>
        <width>80</width>
        <height>50</height>
       </rect>

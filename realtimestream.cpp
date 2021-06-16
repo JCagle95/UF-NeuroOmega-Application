@@ -32,7 +32,7 @@ void RealtimeStream::closeEvent(QCloseEvent *event)
     emit windowClosed();
 }
 
-void RealtimeStream::initializeElectrode(QString electrodeName, int electrodeConfiguration[8])
+void RealtimeStream::initializeElectrode(QString electrodeName, QVector<int> electrodeConfiguration)
 {
     if (electrodeName == "Microelectrode / Macroelectrode")
     {
