@@ -73,3 +73,7 @@ win32: LIBS += -L$$PWD/NeuroOmega_SDK/ -lNeuroOmega_x64
 
 INCLUDEPATH += $$PWD/NeuroOmega_SDK/Include
 DEPENDPATH += $$PWD/NeuroOmega_SDK
+
+DISTFILES += \
+    DefaultStimulationConfiguration_4Contacts.json \
+    InterfaceConfigurations.json

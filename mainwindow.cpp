@@ -161,7 +161,6 @@ void MainWindow::on_NeuroOmega_BtnConnect_clicked()
                 controllerForm = new ControllerForm();
                 controllerForm->controllerInitialization(this->patientID, this->diagnosis);
                 controllerForm->configureElectrodes(configurationForm->electrodeInfoCollection);
-                qDebug() << "Test";
                 controllerForm->setFixedSize(controllerForm->size());
                 connect(controllerForm, &ControllerForm::connectionChanged, this, &MainWindow::onConnectionUpdate);
                 controllerForm->show();
