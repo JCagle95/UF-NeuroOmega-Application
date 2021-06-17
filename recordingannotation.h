@@ -19,6 +19,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define RECORDINGANNOTATION_H
 
 #include <QDialog>
+#include <QFile>
+#include <QDir>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 namespace Ui {
 class RecordingAnnotation;
@@ -37,10 +41,11 @@ private slots:
     void on_RecordingAnnotation_clicked();
 
 signals:
-    void channelIDsUpdate(QString annotation);
+    void channelIDsUpdate(QString annotation, QJsonDocument taskDocument);
 
 private:
     Ui::RecordingAnnotation *ui;
+    QJsonObject taskDefinitions;
 
     QString annotation = "No Annotation";
 };

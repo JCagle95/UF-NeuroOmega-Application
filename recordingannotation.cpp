@@ -23,11 +23,38 @@ RecordingAnnotation::RecordingAnnotation(QWidget *parent) :
     ui(new Ui::RecordingAnnotation)
 {
     ui->setupUi(this);
+
+    QFile file;
+    file.setFileName(QDir::currentPath() + "/InterfaceConfigurations.json");
+    if (!file.open(QIODevice::ReadOnly)) return;
+    QByteArray configurationData = file.readAll();
+
+    QJsonDocument loadedDocument = QJsonDocument::fromJson(configurationData);
+    if (loadedDocument.isObject())
+    {
+        QJsonObject documentObject = loadedDocument.object();
+        if (documentObject.contains("TaskDefinitions")) taskDefinitions = loadedDocument.object()["TaskDefinitions"].toObject();
+    }
+
+    if (!taskDefinitions.isEmpty())
+    {
+        QPushButton* buttons[6] = {ui->RecordingAnnotationSelect, ui->RecordingAnnotationSelect_2, ui->RecordingAnnotationSelect_3,
+                                  ui->RecordingAnnotationSelect_4, ui->RecordingAnnotationSelect_5, ui->RecordingAnnotationSelect_6};
+        for (int i = 0; i < 6; i++)
+        {
+            buttons[i]->setVisible(false);
+            if (i < taskDefinitions.keys().size())
+            {
+                buttons[i]->setText(taskDefinitions.keys()[i]);
+                buttons[i]->setVisible(true);
+            }
+        }
+    }
 }
 
 void RecordingAnnotation::closeEvent()
 {
-    emit channelIDsUpdate(annotation);
+    emit channelIDsUpdate(annotation, QJsonDocument());
 }
 
 RecordingAnnotation::~RecordingAnnotation()
@@ -39,6 +66,19 @@ void RecordingAnnotation::on_RecordingAnnotation_clicked()
 {
     QPushButton* buttonClicked = qobject_cast<QPushButton*>(sender());
     annotation = buttonClicked->text();
-    emit channelIDsUpdate(annotation);
+
+    QJsonDocument loadedDocument = QJsonDocument();
+    if (!taskDefinitions.isEmpty())
+    {
+        QFile file;
+        file.setFileName(QDir::currentPath() + "/" + taskDefinitions[annotation].toString());
+        if (file.open(QIODevice::ReadOnly))
+        {
+            QByteArray configurationData = file.readAll();
+            loadedDocument = QJsonDocument::fromJson(configurationData);
+        }
+    }
+
+    emit channelIDsUpdate(annotation, loadedDocument);
     this->close();
 }

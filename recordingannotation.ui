@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>588</width>
-    <height>156</height>
+    <height>180</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,7 +22,7 @@
      <x>20</x>
      <y>20</y>
      <width>161</width>
-     <height>41</height>
+     <height>61</height>
     </rect>
    </property>
    <property name="font">
@@ -32,7 +32,7 @@
     </font>
    </property>
    <property name="text">
-    <string>DBS Threshold</string>
+    <string>Acute Gait</string>
    </property>
   </widget>
   <widget class="QPushButton" name="RecordingAnnotationSelect_2">
@@ -44,7 +44,7 @@
      <x>210</x>
      <y>20</y>
      <width>161</width>
-     <height>41</height>
+     <height>61</height>
     </rect>
    </property>
    <property name="font">
@@ -66,7 +66,7 @@
      <x>400</x>
      <y>20</y>
      <width>161</width>
-     <height>41</height>
+     <height>61</height>
     </rect>
    </property>
    <property name="font">
@@ -86,7 +86,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>80</y>
+     <y>100</y>
      <width>161</width>
      <height>61</height>
     </rect>
@@ -108,7 +108,7 @@
    <property name="geometry">
     <rect>
      <x>210</x>
-     <y>80</y>
+     <y>100</y>
      <width>161</width>
      <height>61</height>
     </rect>
@@ -131,7 +131,7 @@ Research Stim</string>
    <property name="geometry">
     <rect>
      <x>400</x>
-     <y>80</y>
+     <y>100</y>
      <width>161</width>
      <height>61</height>
     </rect>
