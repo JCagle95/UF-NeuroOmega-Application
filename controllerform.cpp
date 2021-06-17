@@ -47,6 +47,12 @@ ControllerForm::ControllerForm(QWidget *parent) :
     naturalButtonStyle += "background-color: [COLOR];";
     naturalButtonStyle += "}";
 
+    ui->SequenceDisplayTable->setVisible(false);
+    ui->SequenceDisplayTable->setColumnWidth(0, 60);
+    ui->SequenceDisplayTable->setColumnWidth(1, 90);
+    ui->SequenceDisplayTable->setColumnWidth(2, 90);
+    ui->SequenceDisplayTable->setColumnWidth(3, 120);
+
     // Status Timer for Periodic Connection Checks
     connectionCheck = new QTimer(this);
     connect(connectionCheck, &QTimer::timeout, this, &ControllerForm::checkStatus);
@@ -869,7 +875,7 @@ void ControllerForm::startSequentialStimulation()
                             return;
                         }
 
-                        updateAnnotation("Research_" + stimulationSequences[i].toObject()["RecordingFilename"].toString());
+                        updateAnnotation("Research_" + stimulationSequences[i].toObject()["RecordingFilename"].toString(), QJsonDocument());
                         currentProgrammedFilename = stimulationSequences[i].toObject()["RecordingFilename"].toString();
 
                         result = StartSave();
@@ -972,6 +978,7 @@ void ControllerForm::startSequentialStimulation()
                         return;
                     }
 
+                    ui->SequenceDisplayTable->setRowHidden(this->currentStimulationStage, true);
                     this->currentStimulationState = false;
                     this->currentStimulationStage = i+1;
                 }
@@ -984,6 +991,7 @@ void ControllerForm::startSequentialStimulation()
     if (this->currentStimulationStage == stimulationSequences.size() && !this->currentStimulationState)
     {
         on_StimulationControl_Stop_clicked();
+        ui->SequenceDisplayTable->setVisible(false);
     }
 }
 
@@ -1146,7 +1154,6 @@ bool ControllerForm::configureRecordingChannels()
                     displayError(QMessageBox::Warning, messsage);
                     return false;
                 }
-                printf("%d:%s\n",this->electrodeConfigurations[i].channelIDs[j], channelName.toStdString().c_str());
             }
         }
     }
@@ -1166,65 +1173,19 @@ bool ControllerForm::configureRecordingChannels()
 // Perform different recording task based on the annotation.
 //      This function is customizable. Please include your own pipeline to handle different pre-defined task.
 //      As an example, we used "4 Contacts\nResearch Stim" and "8 Contacts\nResearch Stim" to start the NovelStimulation.
-void ControllerForm::updateAnnotation(QString annotations)
+void ControllerForm::updateAnnotation(QString annotations, QJsonDocument loadedDocument)
 {
     // 4-Contact Electrode (i.e. Medtronic 3387, 3389)
-    if (annotations == "4 Contacts\nResearch Stim" || annotations == "8 Contacts\nResearch Stim")
+    if (!loadedDocument.isEmpty())
     {
-        QFile file;
-        if (annotations == "4 Contacts\nResearch Stim")
-        {
-            // Notify the user if the current selected electrode is not 4 contacts, this is likely a mistake made by the User
-            if (this->electrodeConfigurations[0].numContacts != 4)
-            {
-                displayError(QMessageBox::Warning, "Electrode Contacts Not Matching");
-                return;
-            }
-
-            // Select the Sequential Stimulation Configuration JSON
-            file.setFileName(QDir::currentPath() + "/DefaultStimulationConfiguration_4Contacts.json");
-            if (!file.open(QIODevice::ReadOnly))
-            {
-                displayError(QMessageBox::Warning, "File not found");
-                return;
-            }
-        }
-        else
-        {
-            // Notify the user if the current selected electrode is not 8 contacts, this is likely a mistake made by the User
-            if (this->electrodeConfigurations[0].numContacts != 8)
-            {
-                displayError(QMessageBox::Warning, "Electrode Contacts Not Matching");
-                return;
-            }
-
-            // Select the Sequential Stimulation Configuration JSON
-            file.setFileName(QDir::currentPath() + "/DefaultStimulationConfiguration_8Contacts.json");
-            if (!file.open(QIODevice::ReadOnly))
-            {
-                displayError(QMessageBox::Warning, "File not found");
-                return;
-            }
-
-        }
-
         // Stop Current Stimulation in order to start the novel stimulation
         on_StimulationControl_Stop_clicked();
 
         // Parsing Stimulation JSON file. Check to see if the JSON is valid here.
-        QByteArray sequenceData = file.readAll();
-        QJsonDocument loadedDocument = QJsonDocument::fromJson(sequenceData);
         if (loadedDocument.isObject())
         {
             QJsonObject stimulationConfiguration = loadedDocument.object();
             if (stimulationConfiguration.contains("StimulationName")) this->stimulationConfigurations = loadedDocument;
-        }
-
-        // Notify user if no novel waveform loaded.
-        if (this->waveformList.size() == 0)
-        {
-            displayError(QMessageBox::Warning, "Novel Waveform not yet loaded");
-            return;
         }
 
         // Notify user if stimulation JSON file is not valid.
@@ -1238,6 +1199,85 @@ void ControllerForm::updateAnnotation(QString annotations)
         if (!stimulationConfigurations.object().contains("StimulationSequence"))
         {
             displayError(QMessageBox::Warning, "Bad Stimulation Configuration");
+            return;
+        }
+
+        bool analogWaveformNeeded = false;
+        QJsonArray stimulationSequences = stimulationConfigurations.object()["StimulationSequence"].toArray();
+        for (int i = 0; i < ui->SequenceDisplayTable->rowCount(); i++)
+        {
+            ui->SequenceDisplayTable->removeRow(0);
+        }
+        for (int i = 0; i < stimulationSequences.size(); i++)
+        {
+            ui->SequenceDisplayTable->insertRow(i);
+            ui->SequenceDisplayTable->setItem(i, 0, new QTableWidgetItem(stimulationSequences[i].toObject()["StimulationType"].toString()));
+
+            ui->SequenceDisplayTable->setItem(i, 1, new QTableWidgetItem(stimulationSequences[i].toObject()["RecordingFilename"].toString()));
+            ui->SequenceDisplayTable->item(i,1)->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
+            QString recordingDuration = QString::number(stimulationSequences[i].toObject()["Duration"].toInt()) + " sec";
+            ui->SequenceDisplayTable->setItem(i, 2, new QTableWidgetItem(recordingDuration));
+            ui->SequenceDisplayTable->item(i,2)->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
+            if (ui->SequenceDisplayTable->item(i,0)->text() == "Novel")
+            {
+                analogWaveformNeeded = true;
+            }
+
+            if (ui->SequenceDisplayTable->item(i,0)->text() != "Baseline")
+            {
+                QString leadName;
+                ui->StimulationControl_Electrode->count();
+                int leadID = stimulationSequences[i].toObject()["StimulationLead"].toInt();
+                if (leadID == -1)
+                {
+                    ui->SequenceDisplayTable->setItem(i, 3, new QTableWidgetItem(ui->StimulationControl_Electrode->currentText()));
+                }
+                else
+                {
+                    if (leadID < ui->StimulationControl_Electrode->count() - 1)
+                    {
+                        ui->SequenceDisplayTable->setItem(i, 3, new QTableWidgetItem(ui->StimulationControl_Electrode->itemText(leadID+1)));
+                    }
+                    else
+                    {
+                        displayError(QMessageBox::Critical, "Bad definition on Lead ID");
+                        return;
+                    }
+                }
+
+                QString stimulationContactsText;
+                QJsonArray stimulationContacts = stimulationSequences[i].toObject()["StimulationChannel"].toArray();
+                for (int j = 0; j < stimulationContacts.size(); j++)
+                {
+                    stimulationContactsText += "-E" + QString::number(stimulationContacts[j].toInt()) + " ";
+                }
+                if (stimulationSequences[i].toObject()["StimulationReturn"].toInt() >= 0)
+                {
+                    stimulationContactsText += "+E" + QString::number(stimulationSequences[i].toObject()["StimulationReturn"].toInt()) + " ";
+                }
+                else
+                {
+                    stimulationContactsText += "+CAN";
+                }
+                ui->SequenceDisplayTable->setItem(i, 4, new QTableWidgetItem(stimulationContactsText));
+
+                if (ui->SequenceDisplayTable->item(i,0)->text() == "Standard")
+                {
+                    ui->SequenceDisplayTable->setItem(i, 5, new QTableWidgetItem(QString("%1 mA").arg(stimulationSequences[i].toObject()["Amplitude"].toInt())));
+                    ui->SequenceDisplayTable->setItem(i, 6, new QTableWidgetItem(QString("%1 µS").arg(stimulationSequences[i].toObject()["Pulsewidth"].toInt())));
+                    ui->SequenceDisplayTable->setItem(i, 7, new QTableWidgetItem(QString("%1 Hz").arg(stimulationSequences[i].toObject()["Frequency"].toInt())));
+                }
+            }
+        }
+        ui->SequenceDisplayTable->verticalScrollBar()->setValue(0);
+        ui->SequenceDisplayTable->horizontalScrollBar()->setValue(0);
+
+        // Notify user if no novel waveform loaded.
+        if (analogWaveformNeeded && this->waveformList.size() == 0)
+        {
+            displayError(QMessageBox::Warning, "Novel Waveform not yet loaded");
             return;
         }
 
@@ -1255,6 +1295,7 @@ void ControllerForm::updateAnnotation(QString annotations)
         this->currentStimulationStage = 0;
         novelStimulationStatus = true;
         startSequentialStimulation();
+        ui->SequenceDisplayTable->setVisible(true);
     }
     else
     {
@@ -1356,6 +1397,7 @@ void ControllerForm::on_NeuroOmega_RecordingStop_clicked()
     ui->RecordingLabels_4->setEnabled(false);
     ui->RecordingLabels_5->setEnabled(false);
     ui->RecordingLabels_6->setEnabled(false);
+    ui->SequenceDisplayTable->setVisible(false);
 }
 
 // General Slot() for clicking recording labels. Update UI file to make them your favourite texts to label during recording.

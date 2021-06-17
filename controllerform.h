@@ -26,6 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QTimer>
 #include <QDateTime>
 #include <QElapsedTimer>
+#include <QScrollBar>
 
 #include <cstring>
 #include <windows.h>
@@ -80,7 +81,7 @@ public:
     bool configureRecordingChannels();
     void stimulationStateUpdate();
     void sendLabelMessages(QString messages);
-    void updateAnnotation(QString annotation);
+    void updateAnnotation(QString annotation, QJsonDocument loadedDocument);
     void recordingStateUpdate();
 
     void novelStimulationParametersUpdate(QStringList waveNames, int selectedWave, QJsonDocument stimulationJsonDocument);

@@ -30,7 +30,7 @@ ElectrodeConfigurations::ElectrodeConfigurations(QWidget *parent) :
 
     // Load Target Names
     QJsonArray targetDefinitions = interfaceConfiguration["TargetDefinitions"].toArray();
-    for (int i = 0; i < electrodeDefinitions.size(); i++)
+    for (int i = 0; i < targetDefinitions.size(); i++)
     {
         availableTargetNames.append(targetDefinitions[i].toString());
     }
