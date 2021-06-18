@@ -171,7 +171,7 @@ void ElectrodeConfigurations::on_electrodeNameChanged()
         if (electrodeDefinitions[i].toObject()["ElectrodeName"].toString() == electrodeWidgetsCollection[channelID].electrodeName->currentText())
         {
             electrodeInfoCollection[channelID].numContacts = electrodeDefinitions[i].toObject()["ChannelCount"].toInt();
-            if (electrodeWidgetsCollection[channelID].electrodeName->currentText().contains("ECoG"))
+            if (electrodeWidgetsCollection[channelID].electrodeName->currentText().contains("ECoG") || electrodeWidgetsCollection[channelID].electrodeName->currentText().contains("EMG"))
             {
                 for (int j = 0; j < 2; j++) electrodeInfoCollection[channelID].layoutSize[j] = electrodeDefinitions[i].toObject()["Arrange"].toArray()[j].toInt();
             }

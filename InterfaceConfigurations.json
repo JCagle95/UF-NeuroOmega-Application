@@ -33,7 +33,8 @@
     },
     {
       "ElectrodeName": "EMG",
-      "ChannelCount": 2
+      "ChannelCount": 2,
+      "Arrange": [1,2]
     }
   ],
   "TargetDefinitions": [
@@ -43,7 +44,7 @@
     "VO",
     "Other"
   ],
-  "DiagnosisDefinition": [
+  "DiagnosisDefinitions": [
     "PD",
     "Essential Tremor",
     "Dystonia",

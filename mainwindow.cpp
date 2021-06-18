@@ -40,10 +40,10 @@ MainWindow::MainWindow(QWidget *parent) :
     if (loadedDocument.isObject())
     {
         QJsonObject documentObject = loadedDocument.object();
-        if (documentObject.contains("DiagnosisDefinition"))
+        if (documentObject.contains("DiagnosisDefinitions"))
         {
             ui->diagnosisSelection->clear();
-            QJsonArray diagnosisArray = loadedDocument.object()["DiagnosisDefinition"].toArray();
+            QJsonArray diagnosisArray = loadedDocument.object()["DiagnosisDefinitions"].toArray();
             for (int i = 0; i < diagnosisArray.size(); i++)
             {
                 ui->diagnosisSelection->addItem(diagnosisArray[i].toString());

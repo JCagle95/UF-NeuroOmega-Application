@@ -437,7 +437,7 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
         this->currentElectrodeConfiguration = this->electrodeConfigurations[electrodeID];
 
         // Handle Configuration for 4-contact electrodes
-        if (this->currentElectrodeConfiguration.electrodeType.contains("ECoG"))
+        if (this->currentElectrodeConfiguration.electrodeType.contains("ECoG") || this->currentElectrodeConfiguration.electrodeType.contains("EMG"))
         {
             ui->StimulationContact_Ring01->setHidden(true);
             ui->StimulationContact_Ring02->setHidden(true);
