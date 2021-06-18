@@ -31,6 +31,26 @@ MainWindow::MainWindow(QWidget *parent) :
     applicationConfiguration = new QSettings(QDir::currentPath() + "/defaultSettings.ini", QSettings::IniFormat);
     updateAddresses(applicationConfiguration->value("SystemMACAddress").toString().toStdString(), applicationConfiguration->value("SurgicalLogFolder").toString().toStdString());
 
+    QFile file;
+    file.setFileName(QDir::currentPath() + "/InterfaceConfigurations.json");
+    if (!file.open(QIODevice::ReadOnly)) return;
+    QByteArray configurationData = file.readAll();
+
+    QJsonDocument loadedDocument = QJsonDocument::fromJson(configurationData);
+    if (loadedDocument.isObject())
+    {
+        QJsonObject documentObject = loadedDocument.object();
+        if (documentObject.contains("DiagnosisDefinition"))
+        {
+            ui->diagnosisSelection->clear();
+            QJsonArray diagnosisArray = loadedDocument.object()["DiagnosisDefinition"].toArray();
+            for (int i = 0; i < diagnosisArray.size(); i++)
+            {
+                ui->diagnosisSelection->addItem(diagnosisArray[i].toString());
+            }
+        }
+    }
+
     this->setFixedSize(this->size());
 }
 

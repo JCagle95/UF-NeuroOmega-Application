@@ -43,6 +43,14 @@
     "VO",
     "Other"
   ],
+  "DiagnosisDefinition": [
+    "PD",
+    "Essential Tremor",
+    "Dystonia",
+    "HD",
+    "MS Tremor",
+    "Other"
+  ],
   "TaskDefinitions": {
     "Baseline LFP": "",
     "Sequential\nStimulation": "",
