@@ -1204,7 +1204,7 @@ void ControllerForm::updateAnnotation(QString annotations, QJsonDocument loadedD
 
         bool analogWaveformNeeded = false;
         QJsonArray stimulationSequences = stimulationConfigurations.object()["StimulationSequence"].toArray();
-        for (int i = 0; i < ui->SequenceDisplayTable->rowCount(); i++)
+        while(ui->SequenceDisplayTable->rowCount() > 0)
         {
             ui->SequenceDisplayTable->removeRow(0);
         }
