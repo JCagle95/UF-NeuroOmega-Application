@@ -313,7 +313,7 @@
     <property name="geometry">
      <rect>
       <x>420</x>
-      <y>109</y>
+      <y>100</y>
       <width>161</width>
       <height>41</height>
      </rect>
@@ -1250,7 +1250,7 @@ Recording</string>
     <property name="geometry">
      <rect>
       <x>870</x>
-      <y>220</y>
+      <y>250</y>
       <width>171</width>
       <height>51</height>
      </rect>
@@ -2025,7 +2025,7 @@ Sequence</string>
     <property name="geometry">
      <rect>
       <x>870</x>
-      <y>150</y>
+      <y>190</y>
       <width>171</width>
       <height>51</height>
      </rect>
@@ -2404,6 +2404,27 @@ Stream Output</string>
      <string/>
     </property>
    </widget>
+   <widget class="QCheckBox" name="StimulationControl_PassiveRecharge">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>140</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Passive Recharge</string>
+    </property>
+   </widget>
    <zorder>ElectrodeLayoutWidget</zorder>
    <zorder>label</zorder>
    <zorder>label_2</zorder>
@@ -2471,6 +2492,7 @@ Stream Output</string>
    <zorder>SequenceDisplayTable</zorder>
    <zorder>StimulationContact_GlobalCAN</zorder>
    <zorder>StimulationContact_Ring01</zorder>
+   <zorder>StimulationControl_PassiveRecharge</zorder>
   </widget>
  </widget>
  <resources/>

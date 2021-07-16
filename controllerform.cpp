@@ -315,6 +315,7 @@ void ControllerForm::configureElectrodes(QList<ElectrodeInformation> electrodeIn
     ui->StimulationControl_Frequency->setEnabled(true);
     ui->StimulationControl_Duration->setEnabled(true);
     ui->StimulationControl_Start->setEnabled(true);
+    ui->StimulationControl_PassiveRecharge->setEnabled(true);
     ui->NeuroOmega_RecordingStart->setEnabled(true);
 
     QPushButton *benefitBtns[] = {ui->TremorScale_1, ui->TremorScale_2, ui->TremorScale_3, ui->TremorScale_4, ui->TremorScale_5,
@@ -445,12 +446,14 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
 
             int estimatedHeight = 500/this->electrodeConfigurations[electrodeID].layoutSize[1]*0.8;
 
+            displayError(QMessageBox::Warning, "EMG Found");
             noneStyle.replace("[RADIUS]",QString::number(estimatedHeight/2));
             cathodeStyle.replace("[RADIUS]",QString::number(estimatedHeight/2));
             anodeStyle.replace("[RADIUS]",QString::number(estimatedHeight/2));
 
             for (int i = 0; i < this->electrodeConfigurations[electrodeID].numContacts; i++)
             {
+                displayError(QMessageBox::Warning, "EMG Found");
                 QPushButton *button = new QPushButton();
                 button->setFixedSize(estimatedHeight,estimatedHeight);
                 button->setStyleSheet(noneStyle);
@@ -676,12 +679,14 @@ void ControllerForm::on_StimulationControl_Start_clicked()
     ui->StimulationProgressBar->setValue(0);
 
     // Extract Stimulation Parameter in the UI
-    real32 amplitude = 0, pulsewidth = 0, duration = 0;
+    real32 amplitude = 0, pulsewidth = 0, duration = 0, rechargePulse = 0, rechargeAmplitude = 0;
     int frequency = 0;
-    amplitude = ui->StimulationControl_Amplitude->value();
+    amplitude = -ui->StimulationControl_Amplitude->value();
     pulsewidth = ui->StimulationControl_Pulsewidth->value() / 1000.0;
     duration = ui->StimulationControl_Duration->value();
     frequency = ui->StimulationControl_Frequency->value();
+    rechargePulse = 900 / (float)frequency - pulsewidth;
+    rechargeAmplitude = (amplitude * pulsewidth) / rechargePulse;
 
     // Display error if no stimualtion contacts were selected, or return is not defined
     if (StimulationAnode.size() == 0 || StimulationCathode == 0)
@@ -724,8 +729,15 @@ void ControllerForm::on_StimulationControl_Start_clicked()
     {
         if (this->currentWaveformID == -1)
         {
-
-            int result = SetStimulationParameters(amplitude / StimulationAnode.size(), pulsewidth, -amplitude / StimulationAnode.size(), pulsewidth, frequency, duration, StimulationCathode, StimulationAnode.at(i), 0, 0);
+            int result;
+            if (!ui->StimulationControl_PassiveRecharge->isChecked())
+            {
+                result = SetStimulationParameters(amplitude / StimulationAnode.size(), pulsewidth, -amplitude / StimulationAnode.size(), pulsewidth, frequency, duration, StimulationCathode, StimulationAnode.at(i), 0, 0);
+            }
+            else
+            {
+                result = SetStimulationParameters(amplitude / StimulationAnode.size(), pulsewidth, -rechargeAmplitude / StimulationAnode.size(), rechargePulse, frequency, duration, StimulationCathode, StimulationAnode.at(i), 0, 0);
+            }
             if (result != eAO_OK)
             {
                 QString messsage = getErrorLog();
