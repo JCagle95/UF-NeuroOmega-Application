@@ -48,6 +48,7 @@ public:
     ~NovelStimulationConfiguration();
     void closeEvent(QCloseEvent *event);
     void setupDefault(QStringList waveformNames, int waveformID, QJsonDocument jsonDocument);
+    void displayNovelWaveform();
 
 signals:
     void novelConfigurations(QStringList waveformNames, int waveformID, QJsonDocument jsonDocument);
@@ -58,7 +59,6 @@ private slots:
 
 private:
     Ui::NovelStimulationConfiguration *ui;
-    QString deploymentMode;
     QString novelWaveformURL;
 
     QJsonDocument stimulationJsonDocument;

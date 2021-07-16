@@ -32,7 +32,6 @@ RealtimeStream::RealtimeStream(QWidget *parent) :
     networkManager = new QNetworkAccessManager(this);
     connect(networkManager, &QNetworkAccessManager::finished, this, &RealtimeStream::responseParser);
 
-
     // Status Timer for Periodic Connection Checks
     periodicDataRequest = new QTimer(this);
     connect(periodicDataRequest, &QTimer::timeout, this, &RealtimeStream::updateData);

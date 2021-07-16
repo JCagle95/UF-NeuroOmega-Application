@@ -23,9 +23,6 @@ NovelStimulationConfiguration::NovelStimulationConfiguration(QWidget *parent) :
     ui(new Ui::NovelStimulationConfiguration)
 {
     ui->setupUi(this);
-
-    QSettings *applicationConfiguration = new QSettings(QDir::currentPath() + "/defaultSettings.ini", QSettings::IniFormat);
-    this->deploymentMode = applicationConfiguration->value("DeploymentMode").toString();
 }
 
 NovelStimulationConfiguration::~NovelStimulationConfiguration()
@@ -90,20 +87,12 @@ void NovelStimulationConfiguration::on_chooseNovelWaveform_clicked()
             QSettings *applicationConfiguration = new QSettings(QDir::currentPath() + "/defaultSettings.ini", QSettings::IniFormat);
             applicationConfiguration->setValue("LastNovelStimulation", fileName.first());
 
-            //char *data = malloc(sizeof(char) * 1024);
             char *data = file.readAll().data();
             int16 *stimulationVector = (int16*) data;
             QString wavename = QFileInfo(fileName.first()).fileName().split(".").first();
 
-            int result = 0;
-            if (deploymentMode != "DEBUG")
-            {
-                result = LoadWaveToEmbedded(stimulationVector, file.size() / 2, 1, (cChar*) wavename.toStdString().c_str());
-            }
-            else
-            {
-                result = eAO_OK;
-            }
+            int result = LoadWaveToEmbedded(stimulationVector, file.size() / 2, 1, (cChar*) wavename.toStdString().c_str());
+
             if (result == eAO_OK)
             {
                 if (ui->WaveformSelector->count() > 1)
@@ -123,6 +112,11 @@ void NovelStimulationConfiguration::on_chooseNovelWaveform_clicked()
 
         file.close();
     }
+}
+
+void NovelStimulationConfiguration::displayNovelWaveform()
+{
+
 }
 
 void NovelStimulationConfiguration::on_chooseStimulationSequence_clicked()
