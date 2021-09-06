@@ -53,11 +53,6 @@ ControllerForm::ControllerForm(QWidget *parent) :
     ui->SequenceDisplayTable->setColumnWidth(2, 90);
     ui->SequenceDisplayTable->setColumnWidth(3, 120);
 
-    // Status Timer for Periodic Connection Checks
-    connectionCheck = new QTimer(this);
-    connect(connectionCheck, &QTimer::timeout, this, &ControllerForm::checkStatus);
-    connectionCheck->start(1000);
-
     stimulationStateTimer = new QTimer(this);
 
     this->applicationConfiguration = new QSettings(QDir::currentPath() + "/defaultSettings.ini", QSettings::IniFormat);
@@ -97,6 +92,7 @@ ControllerForm::ControllerForm(QWidget *parent) :
             if (stimulationConfiguration.contains("StimulationName"))
             {
                 this->stimulationConfigurations = loadedDocument;
+                loadAnalogWaveform(stimulationConfiguration["AnalogWaveforms"].toArray());
                 ui->SequenceFilename->setText(this->stimulationConfigurations.object()["StimulationName"].toString());
             }
         }
@@ -143,6 +139,11 @@ void ControllerForm::controllerInitialization(string patientID, string diagnosis
         displayError(QMessageBox::Warning, messsage);
         return;
     }
+
+    // Status Timer for Periodic Connection Checks
+    connectionCheck = new QTimer(this);
+    connect(connectionCheck, &QTimer::timeout, this, &ControllerForm::checkStatus);
+    connectionCheck->start(1000);
 
 }
 
@@ -269,6 +270,31 @@ void ControllerForm::checkStatus()
     ui->NeuroOmega_StatusString->setText(statusMessage);
 
     if (this->recordingStatus) ui->RecordingDurationLabel->setText(QString::number(recordingElapsedTime.elapsed() / 1000) + " sec");
+
+    QJsonObject jsonObject;
+    jsonObject["ObjectType"] = QJsonValue("MotorStatus");
+
+    QDateTime currentTime;
+    jsonObject["Time"] = QJsonValue(currentTime.currentDateTime().toString("yyyy/MM/dd HH:mm:ss"));
+
+    int32 motorDepth = 0;
+    result = GetDriveDepth(&motorDepth);
+    if (result == eAO_OK)
+    {
+        jsonObject["CurrentDepth"] = QJsonValue((qint64)motorDepth);
+        uint32 motorStopTimer = 0, motorStartTimer = 0;
+        result = GetMoveMotorTS(&motorStartTimer);
+        if (result == eAO_OK)
+        {
+            jsonObject["LastMoveTS"] = QJsonValue((qint64)motorStartTimer);
+        }
+        result = GetStopMotorTS(&motorStopTimer);
+        if (result == eAO_OK)
+        {
+            jsonObject["LastStopTS"] = QJsonValue((qint64)motorStopTimer);
+        }
+        jsonStorage->addJSON(jsonObject);
+    }
 }
 
 ////////////////////////////////////
@@ -315,7 +341,7 @@ void ControllerForm::configureElectrodes(QList<ElectrodeInformation> electrodeIn
     ui->StimulationControl_Frequency->setEnabled(true);
     ui->StimulationControl_Duration->setEnabled(true);
     ui->StimulationControl_Start->setEnabled(true);
-    ui->StimulationControl_PassiveRecharge->setEnabled(true);
+    ui->StimulationControl_PassiveRecharge->setEnabled(false);
     ui->NeuroOmega_RecordingStart->setEnabled(true);
 
     QPushButton *benefitBtns[] = {ui->TremorScale_1, ui->TremorScale_2, ui->TremorScale_3, ui->TremorScale_4, ui->TremorScale_5,
@@ -901,9 +927,29 @@ void ControllerForm::startSequentialStimulation()
 
                     if (stimulationSequences[i].toObject()["StimulationType"].toString().contains("Novel"))
                     {
+
+                        int16_t* stimulationVector = this->preloadedAnalogWaveforms[stimulationSequences[i].toObject()["StimulationIndex"].toInt() - 1];
+                        AnalogWaveformDescriptor overview = analogWaveformDescriptor[stimulationSequences[i].toObject()["StimulationIndex"].toInt() - 1];
+
+                        int result = LoadWaveToEmbedded(stimulationVector, overview.filesize, 1, (cChar*)overview.wavename.toStdString().c_str());
+                        if (result != eAO_OK)
+                        {
+                            QString messsage = getErrorLog();
+                            displayError(QMessageBox::Warning, messsage);
+                            on_StimulationControl_Stop_clicked();
+                            return;
+                        }
+                        else
+                        {
+                            this->waveformList.clear();
+                            this->waveformList.append(overview.wavename);
+                            this->currentWaveformID = 0;
+                        }
+
+                        QElapsedTimer executionTimer = QElapsedTimer();
                         for (int j = 0; j < stimulationContactArray.size(); j++)
                         {
-                            if (stimulationContactArray[j].toInt() > this->electrodeConfigurations[stimulationSequences[i].toObject()["StimulationLead"].toInt()].numContacts ||
+                            if (stimulationContactArray[j].toInt() >= this->electrodeConfigurations[stimulationSequences[i].toObject()["StimulationLead"].toInt()].numContacts ||
                                 stimulationContactArray[j].toInt() < 0)
                             {
                                 displayError(QMessageBox::Warning, "Bad Stimulation Configuration, Bad contacts");
@@ -911,7 +957,12 @@ void ControllerForm::startSequentialStimulation()
                                 return;
                             }
 
-                            int result = StartAnalogStimulation(electrodeContacts[stimulationContactArray[j].toInt()], 0, -1, stimulationSequences[i].toObject()["Duration"].toInt(), returnContact);
+                            int result = StartAnalogStimulation(electrodeContacts[stimulationContactArray[j].toInt()], this->currentWaveformID, -1, stimulationSequences[i].toObject()["Duration"].toInt(), returnContact);
+                            executionTimer.restart();
+                            while (executionTimer.elapsed() < 5000 && result != eAO_OK)
+                            {
+                                result = StartAnalogStimulation(electrodeContacts[stimulationContactArray[j].toInt()], this->currentWaveformID, -1, stimulationSequences[i].toObject()["Duration"].toInt(), returnContact);
+                            }
                             if (result != eAO_OK)
                             {
                                 QString messsage = getErrorLog();
@@ -919,7 +970,6 @@ void ControllerForm::startSequentialStimulation()
                                 on_StimulationControl_Stop_clicked();
                                 return;
                             }
-
                         }
                     }
                     else if (stimulationSequences[i].toObject()["StimulationType"].toString().contains("Standard"))
@@ -943,9 +993,9 @@ void ControllerForm::startSequentialStimulation()
                                 return;
                             }
 
-                            int result = SetStimulationParameters(stimulationSequences[i].toObject()["Amplitude"].toDouble() / stimulationContactArray.size(),
+                            int result = SetStimulationParameters(-stimulationSequences[i].toObject()["Amplitude"].toDouble() / stimulationContactArray.size(),
                                                                   stimulationSequences[i].toObject()["Pulsewidth"].toDouble() / 1000.0,
-                                                                  -stimulationSequences[i].toObject()["Amplitude"].toDouble() / stimulationContactArray.size(),
+                                                                  stimulationSequences[i].toObject()["Amplitude"].toDouble() / stimulationContactArray.size(),
                                                                   stimulationSequences[i].toObject()["Pulsewidth"].toDouble() / 1000.0,
                                                                   stimulationSequences[i].toObject()["Frequency"].toInt(),
                                                                   stimulationSequences[i].toObject()["Duration"].toInt(),
@@ -1286,8 +1336,21 @@ void ControllerForm::updateAnnotation(QString annotations, QJsonDocument loadedD
         ui->SequenceDisplayTable->verticalScrollBar()->setValue(0);
         ui->SequenceDisplayTable->horizontalScrollBar()->setValue(0);
 
+        if (analogWaveformNeeded)
+        {
+            if (stimulationConfigurations.object().contains("AnalogWaveforms"))
+            {
+                loadAnalogWaveform(stimulationConfigurations.object()["AnalogWaveforms"].toArray());
+            }
+            else
+            {
+                displayError(QMessageBox::Warning, "Novel Waveform not in configurations");
+                return;
+            }
+        }
+
         // Notify user if no novel waveform loaded.
-        if (analogWaveformNeeded && this->waveformList.size() == 0)
+        if (analogWaveformNeeded && this->preloadedAnalogWaveforms.count() == 0)
         {
             displayError(QMessageBox::Warning, "Novel Waveform not yet loaded");
             return;
@@ -1549,4 +1612,52 @@ void ControllerForm::streamWindowClosed(void)
 {
     delete(streamView);
     streamView = NULL;
+}
+
+void ControllerForm::loadAnalogWaveform(QJsonArray filenameArray)
+{
+    if (!this->preloadedAnalogWaveforms.isEmpty())
+    {
+        for (int i = 0; i < this->preloadedAnalogWaveforms.count(); i++)
+        {
+            free(this->preloadedAnalogWaveforms[i]);
+        }
+        this->preloadedAnalogWaveforms.clear();
+    }
+
+    try
+    {
+        for (int i = 0; i < filenameArray.count(); i++)
+        {
+            QFile file(qApp->applicationDirPath() + "/" + filenameArray[i].toString());
+            if (!file.open(QIODevice::ReadOnly))
+            {
+                throw -1;
+            }
+
+            QByteArray byteArray = file.readAll();
+            char *data = byteArray.data();
+
+            AnalogWaveformDescriptor overview;
+            overview.filesize = file.size() / 2;
+            overview.wavename = QFileInfo(qApp->applicationDirPath() + "/" + filenameArray[i].toString()).fileName().split(".").first();
+            analogWaveformDescriptor.append(overview);
+
+            int16 *stimulationVector = (int16*)malloc(file.size());
+            memcpy(stimulationVector, data, file.size());
+            this->preloadedAnalogWaveforms.append(stimulationVector);
+
+        }
+    }  catch (int errorCode) {
+        qDebug() << "Error Occurred";
+        if (!this->preloadedAnalogWaveforms.isEmpty())
+        {
+            for (int i = 0; i < this->preloadedAnalogWaveforms.count(); i++)
+            {
+                free(this->preloadedAnalogWaveforms[i]);
+            }
+            this->preloadedAnalogWaveforms.clear();
+        }
+    }
+
 }

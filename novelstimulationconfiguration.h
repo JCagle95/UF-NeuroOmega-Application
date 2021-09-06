@@ -39,6 +39,11 @@ namespace Ui {
 class NovelStimulationConfiguration;
 }
 
+typedef struct AnalogWaveformDescriptor {
+    QString wavename = "";
+    int filesize = 0;
+} AnalogWaveformDescriptor;
+
 class NovelStimulationConfiguration : public QDialog
 {
     Q_OBJECT

@@ -68,6 +68,7 @@ public:
     QString getErrorLog();
     void displayError(int errorLevel, QString message);
     void checkStatus();
+    void timedExecution(void *function, int timeout);
 
     void configureElectrodeConfigurationText(QString electrodeSelectorName, int type);
 
@@ -86,6 +87,7 @@ public:
 
     void novelStimulationParametersUpdate(QStringList waveNames, int selectedWave, QJsonDocument stimulationJsonDocument);
     void startSequentialStimulation();
+    void loadAnalogWaveform(QJsonArray filenameArray);
 
 signals:
     void connectionChanged();
@@ -168,6 +170,10 @@ private:
     QString currentProgrammedFilename = "";
     QStringList waveformList;
     int currentWaveformID = -1;
+
+    QList<int16_t*> preloadedAnalogWaveforms;
+    QList<AnalogWaveformDescriptor> analogWaveformDescriptor;
+
 
     // Realtime Stream QT Form
     RealtimeStream *streamView;
