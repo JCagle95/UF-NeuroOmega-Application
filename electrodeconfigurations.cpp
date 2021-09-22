@@ -155,7 +155,7 @@ void ElectrodeConfigurations::addNewElectrodeRow(int rowID)
 
 void ElectrodeConfigurations::on_AddElectrodes_clicked()
 {
-    addNewElectrodeRow(electrodeWidgetsCollection.length());
+    addNewElectrodeRow(electrodeWidgetsCollection.length()+1);
 }
 
 void ElectrodeConfigurations::on_electrodeNameChanged()

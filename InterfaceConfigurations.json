@@ -9,7 +9,11 @@
       "ChannelCount": 4
     },
     {
-      "ElectrodeName": "Medtronic Segmented",
+      "ElectrodeName": "Medtronic B33015",
+      "ChannelCount": 8
+    },
+    {
+      "ElectrodeName": "Medtronic B33005",
       "ChannelCount": 8
     },
     {
@@ -42,6 +46,7 @@
     "STN",
     "VIM",
     "VO",
+    "ECR",
     "Other"
   ],
   "DiagnosisDefinitions": [

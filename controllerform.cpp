@@ -341,7 +341,7 @@ void ControllerForm::configureElectrodes(QList<ElectrodeInformation> electrodeIn
     ui->StimulationControl_Frequency->setEnabled(true);
     ui->StimulationControl_Duration->setEnabled(true);
     ui->StimulationControl_Start->setEnabled(true);
-    ui->StimulationControl_PassiveRecharge->setEnabled(false);
+    ui->StimulationControl_PassiveRecharge->setEnabled(true);
     ui->NeuroOmega_RecordingStart->setEnabled(true);
 
     QPushButton *benefitBtns[] = {ui->TremorScale_1, ui->TremorScale_2, ui->TremorScale_3, ui->TremorScale_4, ui->TremorScale_5,
@@ -472,14 +472,12 @@ void ControllerForm::setupElectrodeButtons(QString electrodeName)
 
             int estimatedHeight = 500/this->electrodeConfigurations[electrodeID].layoutSize[1]*0.8;
 
-            displayError(QMessageBox::Warning, "EMG Found");
             noneStyle.replace("[RADIUS]",QString::number(estimatedHeight/2));
             cathodeStyle.replace("[RADIUS]",QString::number(estimatedHeight/2));
             anodeStyle.replace("[RADIUS]",QString::number(estimatedHeight/2));
 
             for (int i = 0; i < this->electrodeConfigurations[electrodeID].numContacts; i++)
             {
-                displayError(QMessageBox::Warning, "EMG Found");
                 QPushButton *button = new QPushButton();
                 button->setFixedSize(estimatedHeight,estimatedHeight);
                 button->setStyleSheet(noneStyle);
@@ -539,11 +537,25 @@ void ControllerForm::on_StimulationControl_Electrode_currentTextChanged(const QS
 // Quick reset for all electrode cathodes. This will be execute every time electrode selector changes.
 void ControllerForm::resetCathodeSelection()
 {
-    for (int i = 0; i < displayChannelButtons.size(); i++)
+    if (displayChannelButtons.size() > 0)
     {
-        if (displayChannelButtons[i]->styleSheet() == cathodeStyle)
+        for (int i = 0; i < displayChannelButtons.size(); i++)
         {
-            displayChannelButtons[i]->setStyleSheet(noneStyle);
+            if (displayChannelButtons[i]->styleSheet() == cathodeStyle)
+            {
+                displayChannelButtons[i]->setStyleSheet(noneStyle);
+            }
+        }
+    }
+    else
+    {
+        QPushButton *contactButtons[] = {ui->StimulationContact_E00, ui->StimulationContact_E01_1, ui->StimulationContact_E01_2, ui->StimulationContact_E01_3, ui->StimulationContact_E02_1, ui->StimulationContact_E02_2, ui->StimulationContact_E02_3, ui->StimulationContact_E03};
+        for (int i = 0; i < 8; i++)
+        {
+            if (contactButtons[i]->styleSheet() == cathodeStyle)
+            {
+                contactButtons[i]->setStyleSheet(noneStyle);
+            }
         }
     }
 }
@@ -762,7 +774,7 @@ void ControllerForm::on_StimulationControl_Start_clicked()
             }
             else
             {
-                result = SetStimulationParameters(amplitude / StimulationAnode.size(), pulsewidth, -rechargeAmplitude / StimulationAnode.size(), rechargePulse, frequency, duration, StimulationCathode, StimulationAnode.at(i), 0, 0);
+                result = SetStimulationParameters(amplitude / StimulationAnode.size(), pulsewidth, 0, pulsewidth, frequency, duration, StimulationCathode, StimulationAnode.at(i), 0, 0);
             }
             if (result != eAO_OK)
             {
