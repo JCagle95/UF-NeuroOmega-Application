@@ -1,14 +1,13 @@
 # UF NeuroOmega Application (temporary)
 
-## Build from Source
-The source code of this application is provided as a QT project file. Import the project using the [QT Project File](https://github.com/JCagle95/UF-NeuroOmega-Application/blob/main/NeuroOmega_Application.pro) and build with [qmake](https://doc.qt.io/qt-5/qmake-overview.html). 
+## Active Development Branch
+This is the active development branch for new features and new compatibility. The primary development platform was moved from QT Creator 4.2.0 to 4.15.0, and the codes are actively upgrading toward the current QT version: QT 6.1.0 at the time of development. As a result, this branch will not be compatible with older build-kit, especially that some signals are deprecated when switching from QT5 to QT6. 
 
-One essential component currently not provided in the repo is the NeuroOmega SDK 2.0. This should be provided by the Alpha Omega representatives. Install the NeuroOmega SDK 2.0 and reference to the static library in the [QT Project File](https://github.com/JCagle95/UF-NeuroOmega-Application/blob/main/NeuroOmega_Application.pro).
+## Active Development Feature
+The primary goal of this branch is to build a new interface for real-time data streaming as a complementary interface to the existing stimulation control interface. This real-time data streaming is primary used for research purpose at the moment, but further development will incorporate resarch findings to provide real-time functional mapping.
 
-The source codes are written and tested in QT Creator 4.15.0, built with [Desktop QT 6.1.0 MinGW 32-bit], the most updated version at the time of writing. Newer Beta QT versions were not tested, if you found error while compiling, try rolling back to QT 6.1.0. 
-
-## Pre-compiled Binary
-A pre-compiled binary installer for Windows is available in [Release](https://github.com/JCagle95/UF-NeuroOmega-Application/releases/tag/v0.2.0). All runtime libraries, including the NeuroOmega DLL) are packaged into the installer so no additional installations are needed.
+**The software will undergo major revision to accommodate custom electrode format. Before the revision is completed, it is recommeded not to use the developmental branch for production.** A new interface will be designed with dynamic input form before displaying the Controller Form.
 
 ## Build from Source
-The source code of this application is provided as a QT project file. The source codes are written and tested in QT Creator 4.15.0, built with [Desktop QT 6.1.0 MinGW 64-bit] (https://wiki.qt.io/Qt_6.1_Release). QT 5 series are not longer supported in this branch.
+The source code of this application is provided as a QT project file. The source codes are written and tested in QT Creator 4.15, built with [Desktop QT 6.1.0 MinGW 64-bit] (https://wiki.qt.io/Qt_6.1_Release). QT 5 series are not longer supported in this branch.
+
