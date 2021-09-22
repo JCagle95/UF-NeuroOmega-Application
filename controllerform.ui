@@ -2018,29 +2018,6 @@ Sequence</string>
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="RealtimeStreamDisplay">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>870</x>
-      <y>190</y>
-      <width>171</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Microsoft YaHei UI</family>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Display Real-time
-Stream Output</string>
-    </property>
-   </widget>
    <widget class="QWidget" name="ElectrodeLayoutWidget" native="true">
     <property name="geometry">
      <rect>
@@ -2486,7 +2463,6 @@ Stream Output</string>
    <zorder>StimulationControl_Novel</zorder>
    <zorder>StimulationControl_Novel_Start</zorder>
    <zorder>SequenceFilename</zorder>
-   <zorder>RealtimeStreamDisplay</zorder>
    <zorder>StimulationControl_Electrode</zorder>
    <zorder>StimulationContact_Ring02</zorder>
    <zorder>SequenceDisplayTable</zorder>

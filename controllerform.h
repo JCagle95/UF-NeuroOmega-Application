@@ -39,7 +39,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "recordingannotation.h"
 #include "manuallabelentry.h"
 #include "novelstimulationconfiguration.h"
-#include "realtimestream.h"
 
 #ifdef QT_DEBUG
 #include "AOSystemAPI_TEST.h"
@@ -120,10 +119,6 @@ private slots:
     void on_StimulationControl_Novel_clicked();
     void on_StimulationControl_Novel_Start_clicked();
 
-
-    void on_RealtimeStreamDisplay_clicked();
-    void streamWindowClosed(void);
-
 private:
     Ui::ControllerForm *ui;
     QSettings *applicationConfiguration;
@@ -174,9 +169,7 @@ private:
     QList<int16_t*> preloadedAnalogWaveforms;
     QList<AnalogWaveformDescriptor> analogWaveformDescriptor;
 
-
     // Realtime Stream QT Form
-    RealtimeStream *streamView;
     ElectrodeInformation currentElectrodeConfiguration;
 };
 

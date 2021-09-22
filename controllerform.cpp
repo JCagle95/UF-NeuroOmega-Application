@@ -940,8 +940,8 @@ void ControllerForm::startSequentialStimulation()
                     if (stimulationSequences[i].toObject()["StimulationType"].toString().contains("Novel"))
                     {
 
-                        int16_t* stimulationVector = this->preloadedAnalogWaveforms[stimulationSequences[i].toObject()["StimulationIndex"].toInt() - 1];
-                        AnalogWaveformDescriptor overview = analogWaveformDescriptor[stimulationSequences[i].toObject()["StimulationIndex"].toInt() - 1];
+                        int16_t* stimulationVector = this->preloadedAnalogWaveforms[stimulationSequences[i].toObject()["StimulationIndex"].toInt()];
+                        AnalogWaveformDescriptor overview = analogWaveformDescriptor[stimulationSequences[i].toObject()["StimulationIndex"].toInt()];
 
                         int result = LoadWaveToEmbedded(stimulationVector, overview.filesize, 1, (cChar*)overview.wavename.toStdString().c_str());
                         if (result != eAO_OK)
@@ -1353,6 +1353,13 @@ void ControllerForm::updateAnnotation(QString annotations, QJsonDocument loadedD
             if (stimulationConfigurations.object().contains("AnalogWaveforms"))
             {
                 loadAnalogWaveform(stimulationConfigurations.object()["AnalogWaveforms"].toArray());
+                for (int i = 0; i < stimulationSequences.size(); i++)
+                {
+                    if (stimulationSequences[i].toObject()["StimulationType"].toString() == "Novel")
+                    {
+                        ui->SequenceDisplayTable->setItem(i, 0, new QTableWidgetItem(analogWaveformDescriptor[stimulationSequences[i].toObject()["StimulationIndex"].toInt()].wavename));
+                    }
+                }
             }
             else
             {
@@ -1606,24 +1613,6 @@ void ControllerForm::on_Electrodes_AdvanceConfiguration_clicked()
     channelListView.setFixedSize(channelListView.size());
     channelListView.setupChannels();
     channelListView.exec();
-}
-
-void ControllerForm::on_RealtimeStreamDisplay_clicked()
-{
-    // Popup the Stream View
-    if (ui->StimulationControl_Electrode->currentText() != "" && streamView == NULL)
-    {
-        streamView = new RealtimeStream();
-        streamView->initializeElectrode(ui->StimulationControl_Electrode->currentText(), this->currentElectrodeConfiguration.channelIDs);
-        connect(streamView, &RealtimeStream::windowClosed, this, &ControllerForm::streamWindowClosed);
-        streamView->show();
-    }
-}
-
-void ControllerForm::streamWindowClosed(void)
-{
-    delete(streamView);
-    streamView = NULL;
 }
 
 void ControllerForm::loadAnalogWaveform(QJsonArray filenameArray)
