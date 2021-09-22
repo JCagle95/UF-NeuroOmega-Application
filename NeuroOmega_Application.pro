@@ -32,7 +32,6 @@ SOURCES += main.cpp\
     controllerform.cpp \
     channelselectiondialog.cpp \
     detailchannelslist.cpp \
-    realtimestream.cpp \
     recordingannotation.cpp \
     manuallabelentry.cpp \
     novelstimulationconfiguration.cpp \
@@ -46,7 +45,6 @@ HEADERS  += mainwindow.h \
     controllerform.h \
     channelselectiondialog.h \
     detailchannelslist.h \
-    realtimestream.h \
     recordingannotation.h \
     manuallabelentry.h \
     novelstimulationconfiguration.h \
@@ -62,7 +60,6 @@ FORMS    += mainwindow.ui \
     controllerform.ui \
     channelselectiondialog.ui \
     detailchannelslist.ui \
-    realtimestream.ui \
     recordingannotation.ui \
     manuallabelentry.ui \
     novelstimulationconfiguration.ui
@@ -75,5 +72,4 @@ INCLUDEPATH += $$PWD/NeuroOmega_SDK/Include
 DEPENDPATH += $$PWD/NeuroOmega_SDK
 
 DISTFILES += \
-    DefaultStimulationConfiguration_4Contacts.json \
     InterfaceConfigurations.json
