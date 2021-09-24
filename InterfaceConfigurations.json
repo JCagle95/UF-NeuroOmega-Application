@@ -64,5 +64,12 @@
     "4 Contact\nVar Frequency EP": "ERNA_VariableFrequency_4Contacts.json",
     "8 Contact\nVar Frequency EP": "ERNA_VariableFrequency_8Contacts.json",
     "Others": ""
-  }
+  },
+  "RecordingLabels": [
+    "Stimulation ON",
+    "Stimulation OFF",
+    "Test Benefit",
+    "Movement",
+    "Rest"
+  ]
 }
