@@ -145,6 +145,28 @@ void ControllerForm::controllerInitialization(string patientID, string diagnosis
     connect(connectionCheck, &QTimer::timeout, this, &ControllerForm::checkStatus);
     connectionCheck->start(1000);
 
+    QFile file;
+    file.setFileName(QDir::currentPath() + "/InterfaceConfigurations.json");
+    if (!file.open(QIODevice::ReadOnly)) return;
+    QByteArray configurationData = file.readAll();
+
+
+    QJsonDocument loadedDocument = QJsonDocument::fromJson(configurationData);
+    if (loadedDocument.isObject())
+    {
+        QJsonObject documentObject = loadedDocument.object();
+        if (documentObject.contains("RecordingLabels"))
+        {
+            QJsonObject interfaceConfigurations = loadedDocument.object();
+            QJsonArray recordingLabels = interfaceConfigurations["RecordingLabels"].toArray();
+            QPushButton* RecordingLabelButtons[5] = {ui->RecordingLabels_1, ui->RecordingLabels_2, ui->RecordingLabels_3, ui->RecordingLabels_4, ui->RecordingLabels_5};
+            for (int i = 0; i < recordingLabels.count(); i++)
+            {
+                if (i < 5) RecordingLabelButtons[i]->setText(recordingLabels[i].toString());
+            }
+        }
+    }
+
 }
 
 // Clean-up after Form is closed
