@@ -25,11 +25,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QLayout>
 
 #include <QFile>
+#include <QFileDialog>
 #include <QDir>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
 
+#include "jsonstorage.h"
 #include "channelselectiondialog.h"
 
 namespace Ui {
@@ -76,7 +78,12 @@ private slots:
     void on_channelConfiguration();
     void updateChannelConfiguration(int *channelIDs, int len, int electrodeID);
 
+    bool verifyConfigurations();
     void on_ChannelConfirm_clicked();
+
+    void on_SaveChannelConfig_clicked();
+
+    void on_LoadChannelConfig_clicked();
 
 private:
     Ui::ElectrodeConfigurations *ui;

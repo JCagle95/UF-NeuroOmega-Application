@@ -1,0 +1,40 @@
+[
+    {
+        "ChannelIDs": [
+            10288,
+            10289,
+            10290,
+            10291,
+            10292,
+            10293,
+            10294,
+            10295
+        ],
+        "ElectrodeType": "Medtronic B33015",
+        "Hemisphere": "Left",
+        "Layout": [
+            0,
+            0
+        ],
+        "Target": "GPi"
+    },
+    {
+        "ChannelIDs": [
+            10296,
+            10297
+        ],
+        "ElectrodeType": "EMG",
+        "Hemisphere": "Right",
+        "Layout": [
+            1,
+            2
+        ],
+        "Target": "ECR"
+    },
+    {
+        "ElectrodeType": "None"
+    },
+    {
+        "ElectrodeType": "None"
+    }
+]

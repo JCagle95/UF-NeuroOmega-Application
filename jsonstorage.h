@@ -29,6 +29,8 @@ public:
     void addJSON(QJsonObject newObject);
     void addObjectTimestamp(QString key, QString value);
     void saveJSON();
+    void clearContent();
+    QJsonArray getJsonArray();
 
 private:
     QString filePath;

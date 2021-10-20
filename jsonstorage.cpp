@@ -22,7 +22,6 @@ JSONStorage::JSONStorage(QString path, QString name)
     filePath = path;
     fileName = name;
 
-
     QFileInfo fileInfo(filePath + fileName);
     if (fileInfo.exists() && fileInfo.isFile())
     {
@@ -34,6 +33,19 @@ JSONStorage::JSONStorage(QString path, QString name)
 
         jsonArray = jsonDocument.array();
     }
+}
+
+void JSONStorage::clearContent()
+{
+    while (jsonArray.count() > 0)
+    {
+        jsonArray.removeFirst();
+    }
+}
+
+QJsonArray JSONStorage::getJsonArray()
+{
+    return jsonArray;
 }
 
 void JSONStorage::addJSON(QJsonObject newObject)
