@@ -121,10 +121,22 @@ void ControllerForm::controllerInitialization(string patientID, string diagnosis
     QDateTime currentTime;
     statusObject["Time"] = QJsonValue(currentTime.currentDateTime().toString("yyyy/MM/dd HH:mm:ss"));
 
+    // Identify the most recently created folder in SurgicalLogFolder
+
+    QDir SurgicalLogFolder(applicationConfiguration->value("SurgicalLogFolder").toString(), "", QDir::Time, QDir::Dirs);
+    if (SurgicalLogFolder.count() > 2)
+    {
+        patientDirectory = SurgicalLogFolder[2];
+    }
+    else
+    {
+        patientDirectory = "";
+    }
+
     // Create JSON Storage File. This is stored in the SurgicalLogFolder defined in "defaultConfiguration.ini:
-    jsonStorage = new JSONStorage(applicationConfiguration->value("SurgicalLogFolder").toString() + "\\", currentTime.currentDateTime().toString("[yyyyMMdd_HH-mm-ss]") + " " + statusObject["Name"].toString() + ".json");
+    jsonStorage = new JSONStorage(applicationConfiguration->value("SurgicalLogFolder").toString() + "\\" + patientDirectory + "\\", currentTime.currentDateTime().toString("[yyyyMMdd_HH-mm-ss]") + " " + statusObject["Name"].toString() + ".json");
     jsonStorage->addJSON(statusObject);
-    sideEffectNotes = new QFile(applicationConfiguration->value("SurgicalLogFolder").toString() + "\\" + currentTime.currentDateTime().toString("[yyyyMMdd_HH-mm-ss]") + " " + statusObject["Name"].toString() + ".txt");
+    sideEffectNotes = new QFile(applicationConfiguration->value("SurgicalLogFolder").toString() + "\\" + patientDirectory + "\\" + currentTime.currentDateTime().toString("[yyyyMMdd_HH-mm-ss]") + " " + statusObject["Name"].toString() + ".txt");
     sideEffectNotes->open(QIODevice::WriteOnly | QIODevice::Text);
 
     // Reset the filename to MER. This is because NeuroOmega actually keep track of the filename previously set.
