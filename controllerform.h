@@ -156,6 +156,7 @@ private:
     // JSON Storage Class for Loggings
     JSONStorage *jsonStorage;
     QFile *sideEffectNotes;
+    QString patientDirectory;
 
     // Novel Stimulation Parameters
     QJsonDocument stimulationConfigurations;
