@@ -83,6 +83,11 @@ ElectrodeConfigurations::ElectrodeConfigurations(QWidget *parent) :
     scrollAreaLayout->setColumnStretch(3, 2);
     scrollAreaLayout->setColumnStretch(4, 2);
 
+    QSettings applicationConfiguration(QDir::currentPath() + "/defaultSettings.ini", QSettings::IniFormat);
+    if (!applicationConfiguration.value("DefaultChannelConfiguration").isNull())
+    {
+        loadConfigurations(applicationConfiguration.value("DefaultChannelConfiguration").toString());
+    }
 }
 
 ElectrodeConfigurations::~ElectrodeConfigurations()
@@ -356,10 +361,8 @@ void ElectrodeConfigurations::on_SaveChannelConfig_clicked()
     }
 }
 
-
 void ElectrodeConfigurations::on_LoadChannelConfig_clicked()
 {
-
     QFileDialog fileSelector(this);
     fileSelector.setFileMode(QFileDialog::AnyFile);
     fileSelector.setNameFilter(tr("ChannelConfiguration (*.json)"));
@@ -374,73 +377,79 @@ void ElectrodeConfigurations::on_LoadChannelConfig_clicked()
         {
             configFilename += ".json";
         }
-        JSONStorage jsonStorage("", configFilename);
-        QJsonArray electrodeConfiguration = jsonStorage.getJsonArray();
 
-        for (int i = 4; i < electrodeConfiguration.count(); i++)
+        loadConfigurations(configFilename);
+    }
+}
+
+void ElectrodeConfigurations::loadConfigurations(QString fullPath)
+{
+    JSONStorage jsonStorage("", fullPath);
+    QJsonArray electrodeConfiguration = jsonStorage.getJsonArray();
+
+    for (int i = 4; i < electrodeConfiguration.count(); i++)
+    {
+        addNewElectrodeRow(electrodeWidgetsCollection.length()+1);
+    }
+
+    for (int i = 0; i < electrodeConfiguration.count(); i++)
+    {
+        QString electrodeType = electrodeConfiguration[i].toObject()["ElectrodeType"].toString();
+        for (int j = 0; j < electrodeWidgetsCollection[i].electrodeName->count(); j++)
         {
-            addNewElectrodeRow(electrodeWidgetsCollection.length()+1);
+            if (electrodeWidgetsCollection[i].electrodeName->itemText(j) == electrodeType)
+            {
+                electrodeWidgetsCollection[i].electrodeName->setCurrentIndex(j);
+            }
+        }
+        if (electrodeWidgetsCollection[i].electrodeName->currentText() != electrodeType)
+        {
+            electrodeWidgetsCollection[i].electrodeName->addItem(electrodeType);
+            electrodeWidgetsCollection[i].electrodeName->setCurrentIndex(electrodeWidgetsCollection[i].electrodeName->count()-1);
         }
 
-        for (int i = 0; i < electrodeConfiguration.count(); i++)
+        if (electrodeType != "None")
         {
-            QString electrodeType = electrodeConfiguration[i].toObject()["ElectrodeType"].toString();
-            for (int j = 0; j < electrodeWidgetsCollection[i].electrodeName->count(); j++)
+
+            QString hemisphereType = electrodeConfiguration[i].toObject()["Hemisphere"].toString();
+            for (int j = 0; j < electrodeWidgetsCollection[i].hemisphereDefinition->count(); j++)
             {
-                if (electrodeWidgetsCollection[i].electrodeName->itemText(j) == electrodeType)
+                if (electrodeWidgetsCollection[i].hemisphereDefinition->itemText(j) == hemisphereType)
                 {
-                    electrodeWidgetsCollection[i].electrodeName->setCurrentIndex(j);
+                    electrodeWidgetsCollection[i].hemisphereDefinition->setCurrentIndex(j);
                 }
             }
-            if (electrodeWidgetsCollection[i].electrodeName->currentText() != electrodeType)
+            if (electrodeWidgetsCollection[i].hemisphereDefinition->currentText() != hemisphereType)
             {
-                electrodeWidgetsCollection[i].electrodeName->addItem(electrodeType);
-                electrodeWidgetsCollection[i].electrodeName->setCurrentIndex(electrodeWidgetsCollection[i].electrodeName->count()-1);
+                electrodeWidgetsCollection[i].hemisphereDefinition->addItem(hemisphereType);
+                electrodeWidgetsCollection[i].hemisphereDefinition->setCurrentIndex(electrodeWidgetsCollection[i].hemisphereDefinition->count()-1);
             }
 
-            if (electrodeType != "None")
+            QString targetType = electrodeConfiguration[i].toObject()["Target"].toString();
+            for (int j = 0; j < electrodeWidgetsCollection[i].targetDefinition->count(); j++)
             {
+                if (electrodeWidgetsCollection[i].targetDefinition->itemText(j) == targetType)
+                {
+                    electrodeWidgetsCollection[i].targetDefinition->setCurrentIndex(j);
+                }
+            }
+            if (electrodeWidgetsCollection[i].targetDefinition->currentText() != targetType)
+            {
+                electrodeWidgetsCollection[i].targetDefinition->addItem(targetType);
+                electrodeWidgetsCollection[i].targetDefinition->setCurrentIndex(electrodeWidgetsCollection[i].targetDefinition->count()-1);
+            }
 
-                QString hemisphereType = electrodeConfiguration[i].toObject()["Hemisphere"].toString();
-                for (int j = 0; j < electrodeWidgetsCollection[i].hemisphereDefinition->count(); j++)
-                {
-                    if (electrodeWidgetsCollection[i].hemisphereDefinition->itemText(j) == hemisphereType)
-                    {
-                        electrodeWidgetsCollection[i].hemisphereDefinition->setCurrentIndex(j);
-                    }
-                }
-                if (electrodeWidgetsCollection[i].hemisphereDefinition->currentText() != hemisphereType)
-                {
-                    electrodeWidgetsCollection[i].hemisphereDefinition->addItem(hemisphereType);
-                    electrodeWidgetsCollection[i].hemisphereDefinition->setCurrentIndex(electrodeWidgetsCollection[i].hemisphereDefinition->count()-1);
-                }
-
-                QString targetType = electrodeConfiguration[i].toObject()["Target"].toString();
-                for (int j = 0; j < electrodeWidgetsCollection[i].targetDefinition->count(); j++)
-                {
-                    if (electrodeWidgetsCollection[i].targetDefinition->itemText(j) == targetType)
-                    {
-                        electrodeWidgetsCollection[i].targetDefinition->setCurrentIndex(j);
-                    }
-                }
-                if (electrodeWidgetsCollection[i].targetDefinition->currentText() != targetType)
-                {
-                    electrodeWidgetsCollection[i].targetDefinition->addItem(targetType);
-                    electrodeWidgetsCollection[i].targetDefinition->setCurrentIndex(electrodeWidgetsCollection[i].targetDefinition->count()-1);
-                }
-
-                QJsonArray channelIDs = electrodeConfiguration[i].toObject()["ChannelIDs"].toArray();
-                electrodeInfoCollection[i].channelIDs.clear();
-                electrodeInfoCollection[i].numContacts = channelIDs.count();
-                for (int j = 0; j < channelIDs.count(); j++)
-                {
-                    electrodeInfoCollection[i].channelIDs.append(channelIDs[j].toInt());
-                }
-                QJsonArray layoutSize = electrodeConfiguration[i].toObject()["Layout"].toArray();
-                for (int j = 0; j < layoutSize.count(); j++)
-                {
-                    electrodeInfoCollection[i].layoutSize[j] = layoutSize[j].toInt();
-                }
+            QJsonArray channelIDs = electrodeConfiguration[i].toObject()["ChannelIDs"].toArray();
+            electrodeInfoCollection[i].channelIDs.clear();
+            electrodeInfoCollection[i].numContacts = channelIDs.count();
+            for (int j = 0; j < channelIDs.count(); j++)
+            {
+                electrodeInfoCollection[i].channelIDs.append(channelIDs[j].toInt());
+            }
+            QJsonArray layoutSize = electrodeConfiguration[i].toObject()["Layout"].toArray();
+            for (int j = 0; j < layoutSize.count(); j++)
+            {
+                electrodeInfoCollection[i].layoutSize[j] = layoutSize[j].toInt();
             }
         }
     }

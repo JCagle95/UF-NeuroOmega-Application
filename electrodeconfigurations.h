@@ -82,8 +82,8 @@ private slots:
     void on_ChannelConfirm_clicked();
 
     void on_SaveChannelConfig_clicked();
-
     void on_LoadChannelConfig_clicked();
+    void loadConfigurations(QString fullPath);
 
 private:
     Ui::ElectrodeConfigurations *ui;
