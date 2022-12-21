@@ -119,6 +119,8 @@ private slots:
     void on_StimulationControl_Novel_clicked();
     void on_StimulationControl_Novel_Start_clicked();
 
+    void on_StimulationControl_PassiveRecharge_stateChanged(int arg1);
+
 private:
     Ui::ControllerForm *ui;
     QSettings *applicationConfiguration;

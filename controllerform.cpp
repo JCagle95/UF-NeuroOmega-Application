@@ -122,11 +122,18 @@ void ControllerForm::controllerInitialization(string patientID, string diagnosis
     statusObject["Time"] = QJsonValue(currentTime.currentDateTime().toString("yyyy/MM/dd HH:mm:ss"));
 
     // Identify the most recently created folder in SurgicalLogFolder
-
     QDir SurgicalLogFolder(applicationConfiguration->value("SurgicalLogFolder").toString(), "", QDir::Time, QDir::Dirs);
     if (SurgicalLogFolder.count() > 2)
     {
-        patientDirectory = SurgicalLogFolder[2];
+        patientDirectory = "";
+        for (int i = 0; i < SurgicalLogFolder.count(); i++)
+        {
+            if (SurgicalLogFolder[i] != "." && SurgicalLogFolder[i] != "..")
+            {
+                patientDirectory = SurgicalLogFolder[i];
+                break;
+            }
+        }
     }
     else
     {
@@ -1175,6 +1182,11 @@ void ControllerForm::on_StimulationControl_Novel_Start_clicked()
     startSequentialStimulation();
 }
 
+void ControllerForm::on_StimulationControl_PassiveRecharge_stateChanged(int arg1)
+{
+    if (ui->StimulationControl_Stop->isEnabled()) on_StimulationControl_Stop_clicked();
+}
+
 // Stop stimulation if any of the parameter changed.
 void ControllerForm::on_StimulationControlConfigurationChanged(double value)
 {
@@ -1696,3 +1708,4 @@ void ControllerForm::loadAnalogWaveform(QJsonArray filenameArray)
     }
 
 }
+
